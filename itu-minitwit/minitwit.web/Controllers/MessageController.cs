@@ -66,6 +66,7 @@ public class MessageController(MiniTwitDbContext db, LatestService latestService
                 a => a.UserId,
                 (m,a) => new {user = a.Username, text = m.Text, pub_date = m.PubDate}
                 )
+            .OrderByDescending(arg => arg.pub_date)
             .Take(100)
             .ToList();
 
