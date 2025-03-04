@@ -9,13 +9,13 @@ namespace itu_minitwit.SimulatorAPI;
 public class RegisterController(MiniTwitDbContext db, IPasswordHasher<User> passwordHasher, LatestService latestService)
     : ControllerBase
 {
+  
     [HttpPost]
-    public async Task<ActionResult> Register([FromForm] string? username, [FromForm] string? email,
-        [FromForm] string? psw, [FromQuery] int? latest)
+    public async Task<ActionResult> Register([FromBody] RegisterRequest request, [FromQuery] int? latest)
     {
         await latestService.UpdateLatest(latest);
 
-        if (string.IsNullOrWhiteSpace(username))
+        if (string.IsNullOrWhiteSpace(request.Username))
         {
             return new JsonResult(new { status = 400, error_msg = "You have to enter a username" })
             {
@@ -23,7 +23,7 @@ public class RegisterController(MiniTwitDbContext db, IPasswordHasher<User> pass
             };
         }
 
-        if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
+        if (string.IsNullOrWhiteSpace(request.Email) || !request.Email.Contains('@'))
         {
             return new JsonResult(new { status = 400, error_msg = "You have to enter a valid email address" })
             {
@@ -31,7 +31,7 @@ public class RegisterController(MiniTwitDbContext db, IPasswordHasher<User> pass
             };
         }
 
-        if (string.IsNullOrWhiteSpace(psw))
+        if (string.IsNullOrWhiteSpace(request.pwd))
         {
             return new JsonResult(new { status = 400, error_msg = "You have to enter a password" })
             {
@@ -41,10 +41,10 @@ public class RegisterController(MiniTwitDbContext db, IPasswordHasher<User> pass
 
         User user = new User
         {
-            Username = username,
-            Email = email,
+            Username = request.Username,
+            Email = request.Email,
         };
-        user.PwHash = passwordHasher.HashPassword(user, psw);
+        user.PwHash = passwordHasher.HashPassword(user, request.pwd);
 
         try
         {
@@ -61,4 +61,11 @@ public class RegisterController(MiniTwitDbContext db, IPasswordHasher<User> pass
 
         return Ok("");
     }
+}
+
+public class RegisterRequest
+{
+    public string Username { get; set; }
+    public string Email { get; set; }
+    public string pwd { get; set; }
 }
