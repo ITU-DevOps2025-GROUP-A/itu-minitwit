@@ -43,7 +43,7 @@ public class MessageController(IMessageService messageService, ILatestService la
 
     [IgnoreAntiforgeryToken]
     [HttpPost("msgs/{username}")]
-    public async Task<IActionResult> PostMessage(string username, [FromForm] string content)
+    public async Task<IActionResult> PostMessage(string username, [FromBody] string? content)
     {
         
         try
