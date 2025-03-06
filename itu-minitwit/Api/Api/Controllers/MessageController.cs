@@ -4,7 +4,7 @@ using Api.Services.Services;
 namespace itu_minitwit.Controllers;
 
 [Route("/")]
-public class MessageController(IMessageService db, ILatestService latestService) : Controller
+public class MessageController(IMessageService messageService, ILatestService latestService) : Controller
 {
 
     [IgnoreAntiforgeryToken]
@@ -13,7 +13,7 @@ public class MessageController(IMessageService db, ILatestService latestService)
     {
         await latestService.UpdateLatest(latest);
 
-        var messages = db.ReadMessages().Result;
+        var messages = messageService.ReadMessages().Result;
 
         return Json(messages);
     }
@@ -26,7 +26,7 @@ public class MessageController(IMessageService db, ILatestService latestService)
         await latestService.UpdateLatest(1);
         try
         {
-            var filteredMessages = await db.ReadFilteredMessages(username, 100);
+            var filteredMessages = await messageService.ReadFilteredMessages(username, 100);
             if (filteredMessages.Count == 0)
             {
                 return NoContent();
@@ -48,7 +48,7 @@ public class MessageController(IMessageService db, ILatestService latestService)
         
         try
         {
-            await db.PostMessage(username, content);
+            await messageService.PostMessage(username, content);
             return NoContent();
         }
         catch (KeyNotFoundException e)
