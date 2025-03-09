@@ -1,13 +1,10 @@
 name: continuous-deployment.yml
 on:
-  push:
-    branches:
-      - create-workflow
   pull_request:
+    types: [closed]
     branches:
       - main
   workflow_dispatch:
-    manual: true
 
 jobs:
   build:
