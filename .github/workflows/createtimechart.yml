@@ -1,0 +1,30 @@
+name: Run GitScraper and Fetch Chart
+
+on:
+  workflow_dispatch:
+jobs:
+  run-gitscraper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Pull and run GitScraper container
+        run: |
+          docker pull rasmusrlarsen/gitscraper:latest
+          docker run -d --name gitscraper -p 8080:8080 rasmusrlarsen/gitscraper:latest
+          sleep 10  # Wait for the container to be fully ready
+
+      - name: Fetch chart
+        run: |
+          curl -L \
+            -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+            "http://172.17.0.2:8080/generate-chart?org=ITU-DevOps2025-GROUP-A&repo=itu-minitwit" \
+            -o timechart.png
+
+      - name: Upload chart as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: timechart
+          path: timechart.png
