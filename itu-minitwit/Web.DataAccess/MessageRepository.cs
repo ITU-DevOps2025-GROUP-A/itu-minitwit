@@ -15,6 +15,12 @@ public class MessageRepository(HttpClient httpClient) : BaseAPIRepository(httpCl
         return GetAllAsync<DisplayMessageDto>(Endpoint);
     }
     
+    public Task<IEnumerable<DisplayMessageDto>> GetAuthorMessages(string username)
+    {
+        
+        return GetAllAsync<DisplayMessageDto>($"{Endpoint}/{username}");
+    }
+    
     // public Task<bool> PostMessageAsync(DisplayMessageDto message)
     // {
     //     return CreateAsync<DisplayMessageDto,>()
