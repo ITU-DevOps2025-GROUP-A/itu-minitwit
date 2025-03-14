@@ -1,6 +1,12 @@
 ﻿@page "/PrivateTimeline/{Author}"
 <h3>PrivateTimeline</h3>
 
+
+@if (messages != null)
+{
+    <MessageView Messages="messages"></MessageView>
+}
+
 @code {
     
 }
