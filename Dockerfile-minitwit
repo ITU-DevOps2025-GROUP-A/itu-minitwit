@@ -7,7 +7,7 @@ WORKDIR /itu-minitwit/Web
 # Copy project file(s) and restore dependencies
 COPY /itu-minitwit/Web/Web/Web.csproj ./Web/
 COPY /itu-minitwit/Web/Web.Services/Web.Services.csproj ./Web.Services/
-COPY /itu-minitwit/WebWeb.DataAccess/Web.DataAccess.csproj ./Web.DataAccess/
+COPY /itu-minitwit/Web/Web.DataAccess/Web.DataAccess.csproj ./Web.DataAccess/
 
 WORKDIR /itu-minitwit/Web/Web
 RUN dotnet restore --no-cache
@@ -15,7 +15,7 @@ RUN dotnet restore --no-cache
 # Copy the rest of the application source code
 COPY /itu-minitwit/Web/Web ./Web
 COPY /itu-minitwit/Web/Web.Services ./Web.Services
-COPY /itu-minitwit/WebWeb.DataAccess/Web.DataAccess ./Web.DataAccess/
+COPY /itu-minitwit/Web/Web.DataAccess ./Web.DataAccess/
 
 
 # Build and publish the application
