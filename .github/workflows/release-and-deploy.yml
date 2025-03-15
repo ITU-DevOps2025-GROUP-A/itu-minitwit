@@ -33,7 +33,7 @@ jobs:
 
   create-docker-image:
     if: github.event.pull_request.merged == true
-    needs: [check-for-warnings, test]
+    needs: create-tag
     uses: ./.github/workflows/create-docker-image.yml
 
   deploy-to-digitalocean:
