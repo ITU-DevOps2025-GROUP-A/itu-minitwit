@@ -27,28 +27,19 @@ public class RegisterController(
             if (string.IsNullOrWhiteSpace(request.Username))
             {
                 logger.LogError($"Invalid username: \"{request.Username}\"");
-                return new JsonResult(new { status = 400, error_msg = "You have to enter a username" })
-                {
-                    StatusCode = 400
-                };
+                return BadRequest("You have to enter a username");
             }
 
             if (string.IsNullOrWhiteSpace(request.Email) || !request.Email.Contains('@'))
             {
                 logger.LogError($"Invalid email: \"{request.Email}\"");
-                return new JsonResult(new { status = 400, error_msg = "You have to enter a valid email address" })
-                {
-                    StatusCode = 400
-                };
+                return BadRequest("You have to enter a valid email address");
             }
 
             if (string.IsNullOrWhiteSpace(request.Pwd))
             {
                 logger.LogError($"Invalid password: \"{request.Pwd}\"");
-                return new JsonResult(new { status = 400, error_msg = "You have to enter a password" })
-                {
-                    StatusCode = 400
-                };
+                return BadRequest("You have to enter a password");
             }
 
             try
@@ -59,10 +50,7 @@ public class RegisterController(
             catch (UserAlreadyExists e)
             {
                 logger.LogError(e, $"User \"{request.Username}\" is already registered");
-                return new JsonResult(new { status = 400, error_msg = "The username is already taken" })
-                {
-                    StatusCode = 400
-                };
+                return BadRequest("The username is already taken");
             }
         }
         catch (Exception e)
