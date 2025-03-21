@@ -17,6 +17,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
         
         return await dbContext.Messages
             .AsNoTracking()
+            .Where(m => m.Flagged == 0)
             .OrderByDescending(m => m.PubDate)
             .Take(pagesize)
             .Select(m => new DisplayMessageDTO
