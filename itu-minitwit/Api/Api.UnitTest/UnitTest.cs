@@ -56,7 +56,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
         var context = fixture.GetDbContext();
         var user = new User { Username = "test2", Email = "test@test.com", PwHash = "23456" };
         var msg = new Message
-            { AuthorId = 1, Text = "Hello from test", PubDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds() };
+            { AuthorId = 1, Text = "Hello from test", PubDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds(), Flagged = 0};
 
         await context.Users.AddAsync(user); 
         await context.SaveChangesAsync();
