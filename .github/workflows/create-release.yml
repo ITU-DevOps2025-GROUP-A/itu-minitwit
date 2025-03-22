@@ -13,9 +13,6 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    defaults: 
-      run:
-        working-directory: itu-minitwit/
     permissions: 
      contents: write
      actions: read
@@ -32,10 +29,11 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Restore dependencies
-        run: |
-          dotnet restore
+        working-directory: itu-minitwit
+        run: dotnet restore
         
       - name: Build
+        working-directory: itu-minitwit
         run: dotnet build --no-restore
         
       #### Getting timechart with GitScraper image #####
@@ -70,31 +68,16 @@ jobs:
           LATEST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")  # Get latest tag or default to v0.0.0
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
           echo "Current latest tag is $LATEST_TAG"
-
-      - name: List directory structure - before
-        run: ls -R
-
-      - name: Check if directory exists
-        run: |
-          ls ./Api/Api || echo "Directory not found"
-          
-      - name: Check if directory exists
-        run: |
-          ls itu-minitwit/Api/Api || echo "Directory not found"
-
-      - name: List directory structure - after
-        working-directory: ./Api/Api/
-        run: ls -R
   
       - name: release for all platforms - api
-        working-directory: Api/Api/
+        working-directory: itu-minitwit/Api/Api/
         run: |
           dotnet publish --runtime linux-x64 -p:PublishSingleFile=true --self-contained true
           dotnet publish --runtime win-x64 -p:PublishSingleFile=true --self-contained true
           dotnet publish --runtime osx-x64 -p:PublishSingleFile=true --self-contained true
 
       - name: release for all platforms - web
-        working-directory: Web/Web/
+        working-directory: itu-minitwit/Web/Web/
         run: |
           dotnet publish --runtime linux-x64 -p:PublishSingleFile=true --self-contained true
           dotnet publish --runtime win-x64 -p:PublishSingleFile=true --self-contained true
@@ -102,18 +85,18 @@ jobs:
           
       # Create ZIP files
       - name: Zip the output
-        working-directory: Api/Api/bin/Release/net8.0/
+        working-directory: itu-minitwit/Api/Api/bin/Release/net8.0/
         run: |
-          zip -r api-${{ env.LATEST_TAG }}-linux-x64.zip linux-x64/publish/Api
-          zip -r api-${{ env.LATEST_TAG }}-win-x64.zip win-x64/publish/Api.exe
-          zip -r api-${{ env.LATEST_TAG }}-osx-x64.zip osx-x64/publish/Api
+          zip -r api-${{ env.LATEST_TAG }}-linux-x64.zip linux-x64/publish/
+          zip -r api-${{ env.LATEST_TAG }}-win-x64.zip win-x64/publish/
+          zip -r api-${{ env.LATEST_TAG }}-osx-x64.zip osx-x64/publish/
 
       - name: Zip the output
-        working-directory: Web/Web/bin/Release/net8.0/
+        working-directory: itu-minitwit/Web/Web/bin/Release/net8.0/
         run: |
-          zip -r web-${{ env.LATEST_TAG }}-linux-x64.zip linux-x64/publish/web
-          zip -r web-${{ env.LATEST_TAG }}-win-x64.zip win-x64/publish/web.exe
-          zip -r web-${{ env.LATEST_TAG }}-osx-x64.zip osx-x64/publish/web
+          zip -r web-${{ env.LATEST_TAG }}-linux-x64.zip linux-x64/publish/
+          zip -r web-${{ env.LATEST_TAG }}-win-x64.zip win-x64/publish/
+          zip -r web-${{ env.LATEST_TAG }}-osx-x64.zip osx-x64/publish/
 
       # Upload the release artifacts and create the release
       - name: Create GitHub release
