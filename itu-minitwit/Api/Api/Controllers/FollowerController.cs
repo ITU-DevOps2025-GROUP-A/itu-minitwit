@@ -111,4 +111,11 @@ public class FollowerController(IFollowService followService, ILatestService lat
         }
     }
 
+    [HttpGet("fllws/{username}/{potentialFollow}")]
+    public async Task<IActionResult> DoesFollow(string username, string potentialFollow)
+    {
+        if (username == potentialFollow) return BadRequest("You can't follow yourself");
+        return Ok (await followService.DoesFollow(username, potentialFollow));
+    }
+
 }
