@@ -1,29 +1,28 @@
-﻿namespace Web.Services;
+﻿using Web.Services.DTO_s;
+
+namespace Web.Services;
 
 public interface IFollowService
 {
-    public Task<bool> DoesFollow(string user, string potentialFollower);
-    public Task Follow(string user, string follow);
-    public Task UnFollow(string user, string unFollow);
+    public Task<bool> DoesFollow(FollowDto dto);
+    public Task Follow(FollowDto dto);
+    public Task UnFollow(FollowDto dto);
 }
 
 public class FollowService : IFollowService
 {
-    public Task<bool> DoesFollow(string user, string potentialFollower)
+    public Task<bool> DoesFollow(FollowDto dto)
     {
-        //TODO implement
-        return Task.FromResult(new Random().Next(2) % 2 == 0);
+        throw new NotImplementedException();
     }
 
-    public Task Follow(string user, string follow)
+    public Task Follow(FollowDto dto)
     {
-        return Task.CompletedTask;
-        //TODO implement
+        throw new NotImplementedException();
     }
 
-    public Task UnFollow(string user, string unFollow)
+    public Task UnFollow(FollowDto dto)
     {
-        return Task.CompletedTask;
-        //TODO implement
+        throw new NotImplementedException();
     }
 }
