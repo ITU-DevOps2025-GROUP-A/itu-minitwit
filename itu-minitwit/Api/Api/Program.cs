@@ -1,3 +1,4 @@
+using Api;
 using Api.DataAccess;
 using Api.DataAccess.Models;
 using Api.DataAccess.Repositories;
@@ -8,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Serilog;
-using Serilog.Filters;
 using Serilog.Templates;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,16 +20,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // OpenTelemetry for exposing metrics for Prometheus
-var resourceBuilder = ResourceBuilder.CreateDefault()
-    .AddService("minitwit-api", serviceVersion: "1.0.0");
+builder.Services.AddSingleton<MetricsConfig>();
 
-builder.Services.AddOpenTelemetry().WithMetrics(providerBuilder =>
+var resourceBuilder = ResourceBuilder.CreateDefault()
+    .AddService(MetricsConfig.ServiceName, serviceVersion: MetricsConfig.ServiceVersion);
+
+builder.Services.AddOpenTelemetry().WithMetrics(metrics =>
 {
-    providerBuilder.SetResourceBuilder(resourceBuilder);
-    providerBuilder.AddAspNetCoreInstrumentation(); // Enables HTTP metrics
-    providerBuilder.AddHttpClientInstrumentation(); // Enables outgoing request metrics
-    providerBuilder.AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel");
-    providerBuilder.AddPrometheusExporter();
+    metrics.SetResourceBuilder(resourceBuilder)
+        .AddAspNetCoreInstrumentation() // Enables HTTP metrics
+        .AddHttpClientInstrumentation() // Enables outgoing request metrics
+        .AddMeter(
+            "Microsoft.AspNetCore.Hosting", 
+            "Microsoft.AspNetCore.Server.Kestrel",
+            MetricsConfig.ServiceName
+        )
+        .AddPrometheusExporter();
 });
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
