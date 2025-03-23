@@ -46,6 +46,6 @@ jobs:
           curl -X PATCH -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"body\": \"$UPDATED_BODY\"}" \
-            "https://api.github.com/repos/RasmusLarsen02/GitScraper/releases/$RELEASE_ID"
+            "https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
