@@ -11,6 +11,7 @@ public class PrivateTimelineBase : ComponentBase
     [Inject] protected UserState UserState { get; set; } = null!;
     public IEnumerable<DisplayMessageDto>? Messages { get; set; } = null;
 
+    protected MessageGroup MessageGroup { get; } = new MessageGroup();
     protected override async Task OnInitializedAsync()
     {
         if (UserState.IsLoggedIn && UserState.Username == Author)
