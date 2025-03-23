@@ -3,6 +3,7 @@ name: Update Latest Release
 permissions: write-all
 
 on:
+  workflow_dispatch:
   workflow_call:
     secrets:
         DOCKER_PASSWORD:

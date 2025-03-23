@@ -4,7 +4,7 @@ using Web.Services.DTO_s;
 
 namespace Web.Components;
 
-public class CreateMessageBase : ComponentBase
+public class CreateMessageBase : ComponentBase, IDisposable
 {
     [Inject] protected UserState UserState { get; set; } = default!;
     [Inject] protected IMessageService MessageService { get; set; } = default!;
@@ -14,6 +14,16 @@ public class CreateMessageBase : ComponentBase
     [Parameter] public required string Username { get; set; } // Parent sets this
     protected string Message { get; set; } = "";
     protected string StatusMessage { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        UserState.OnChange += StateHasChangedHandler;
+    }
+
+    private async void StateHasChangedHandler()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
     
     protected void OnInputHandler(ChangeEventArgs e)
     {
@@ -64,5 +74,9 @@ public class CreateMessageBase : ComponentBase
             Console.WriteLine($"Error sending message: {ex.Message}");
         }
     }
-
+    
+    public void Dispose()
+    {
+        UserState.OnChange -= StateHasChangedHandler;
+    }
 }

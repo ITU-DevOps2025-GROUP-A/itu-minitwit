@@ -1,6 +1,38 @@
 ﻿@page "/Register"
 <h3>Register</h3>
 
-@code {
-    
-}
+<EditForm Model="RegisterModel" OnValidSubmit="HandleValidSubmit" FormName="Register">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <InputText id="username" class="form-control" @bind-Value="RegisterModel.Username" />
+        <ValidationMessage For="@(() => RegisterModel.Username)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="RegisterModel.Email" />
+        <ValidationMessage For="@(() => RegisterModel.Email)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <InputText type="password" id="password" class="form-control" @bind-Value="RegisterModel.Password" />
+        <ValidationMessage For="@(() => RegisterModel.Password)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <InputText type="password" id="confirmPassword" class="form-control" @bind-Value="RegisterModel.ConfirmPassword" />
+        <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</EditForm>

@@ -20,6 +20,11 @@ public class MessageController(IMessageService db, ILatestService latestService,
             logger.LogInformation($"Updating latest: {latest?.ToString() ?? "null"}");
             await latestService.UpdateLatest(latest);
             var messages = await db.ReadMessages(no);
+            if (messages.Count == 0)
+            {
+                logger.LogInformation("Didn't find any messages");
+                return NoContent();
+            }
             logger.LogInformation($"Message count: {messages.Count}");
             logger.LogInformation($"First message: {messages.First()}");
             logger.LogInformation($"Last message: {messages.Last()}");

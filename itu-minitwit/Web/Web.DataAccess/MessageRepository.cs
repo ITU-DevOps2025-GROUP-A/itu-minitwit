@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using System.Net.Http.Json;
 using System.Web;
 using Microsoft.Extensions.Configuration;
 using Web.DataAccess.Abstract;
@@ -14,7 +15,8 @@ public class MessageRepository(HttpClient httpClient, IConfiguration configurati
 
     public Task<IEnumerable<DisplayMessageDto>> GetMessages()
     {
-        return GetAllAsync<DisplayMessageDto>(Endpoint);
+        var endpoint = $"{ApiBaseUrl}/{Endpoint}";
+        return GetMessagesAsync(endpoint, 30);
     }
     
     public async Task<IEnumerable<DisplayMessageDto>> GetUsersMessages(GetUsersMessageDTO dto)
@@ -38,6 +40,10 @@ public class MessageRepository(HttpClient httpClient, IConfiguration configurati
 
         var response = await HttpClient.GetAsync(uriBuilder.ToString());
         response.EnsureSuccessStatusCode();
+        if(response.StatusCode == HttpStatusCode.NoContent)
+        {
+            return new List<DisplayMessageDto>();
+        }
         var list = await response.Content.ReadFromJsonAsync<IEnumerable<DisplayMessageDto>>();
         return list ?? [];
     }

@@ -1,0 +1,15 @@
+@page "/Logout"
+@using Web.Services
+<h3>Logout</h3>
+
+@code {
+
+    [Inject] protected NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private UserState UserState { get; set; } = null!;
+    
+    protected override void OnInitialized()
+    {
+        UserState.ClearUser();
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+}
