@@ -35,6 +35,6 @@ public class FollowService(IFollowRepository followRepository) : IFollowService
 
     public Task<bool> DoesFollow(string username, string potentialFollow)
     {
-        throw new NotImplementedException();
+        return followRepository.DoesFollow(username, potentialFollow);
     }
 }
