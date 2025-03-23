@@ -55,9 +55,13 @@ public partial class MinitwitDbContext : DbContext
             entity.Property(e => e.Text)
                 .HasColumnType("string")
                 .HasColumnName("text");
-
+            
+            //index for filtering messages from author
             entity.HasIndex(e => new { e.AuthorId, e.Flagged, e.PubDate })
                   .IsDescending(false, false, true);
+            //index for get all messages
+            entity.HasIndex(e => new { e.Flagged, e.PubDate })
+                  .IsDescending(false, true);
         });
 
         modelBuilder.Entity<User>(entity =>
