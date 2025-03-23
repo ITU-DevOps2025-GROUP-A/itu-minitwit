@@ -84,14 +84,14 @@ jobs:
           dotnet publish --runtime osx-x64 -p:PublishSingleFile=true --self-contained true
           
       # Create ZIP files
-      - name: Zip the output
+      - name: Zip the output - api
         working-directory: itu-minitwit/Api/Api/bin/Release/net8.0/
         run: |
           zip -r api-${{ env.LATEST_TAG }}-linux-x64.zip linux-x64/publish/
           zip -r api-${{ env.LATEST_TAG }}-win-x64.zip win-x64/publish/
           zip -r api-${{ env.LATEST_TAG }}-osx-x64.zip osx-x64/publish/
 
-      - name: Zip the output
+      - name: Zip the output - web
         working-directory: itu-minitwit/Web/Web/bin/Release/net8.0/
         run: |
           zip -r web-${{ env.LATEST_TAG }}-linux-x64.zip linux-x64/publish/
@@ -105,12 +105,12 @@ jobs:
           tag_name: ${{ env.LATEST_TAG }}
           name: Release ${{ env.LATEST_TAG }}  # Set release name
           files: |
-            /Api/Api/bin/Release/net8.0/api-${{ env.LATEST_TAG }}-linux-x64.zip
-            /Api/Api/bin/Release/net8.0/api-${{ env.LATEST_TAG }}-win-x64.zip
-            /Api/Api/bin/Release/net8.0/api-${{ env.LATEST_TAG }}-osx-x64.zip
-            /Web/Web/bin/Release/net8.0/web-${{ env.LATEST_TAG }}-linux-x64.zip
-            /Web/Web/bin/Release/net8.0/web-${{ env.LATEST_TAG }}-win-x64.zip
-            /Web/Web/bin/Release/net8.0/web-${{ env.LATEST_TAG }}-osx-x64.zip
+            itu-minitwit/Api/Api/bin/Release/net8.0/api-${{ env.LATEST_TAG }}-linux-x64.zip
+            itu-minitwit/Api/Api/bin/Release/net8.0/api-${{ env.LATEST_TAG }}-win-x64.zip
+            itu-minitwit/Api/Api/bin/Release/net8.0/api-${{ env.LATEST_TAG }}-osx-x64.zip
+            itu-minitwit/Web/Web/bin/Release/net8.0/web-${{ env.LATEST_TAG }}-linux-x64.zip
+            itu-minitwit/Web/Web/bin/Release/net8.0/web-${{ env.LATEST_TAG }}-win-x64.zip
+            itu-minitwit/Web/Web/bin/Release/net8.0/web-${{ env.LATEST_TAG }}-osx-x64.zip
             timechart.png
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
