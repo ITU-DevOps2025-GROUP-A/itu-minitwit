@@ -40,12 +40,13 @@ jobs:
             echo "Error: Could not retrieve image URL"
             exit 1
           fi
-      
-          UPDATED_BODY="### Timechart Report\n\n![Timechart]($IMAGE_URL)"
+          
+          EXISTING_BODY=$(echo "$RELEASE_DATA" | jq -r '.body')
+          UPDATED_BODY="${EXISTING_BODY}\n\n### Timechart Report\n\n![Timechart]($IMAGE_URL)"
           
           curl -X PATCH -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"body\": \"$UPDATED_BODY\"}" \
-            "https://api.github.com/repos/RasmusLarsen02/GitScraper/releases/$RELEASE_ID"
+            "https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
