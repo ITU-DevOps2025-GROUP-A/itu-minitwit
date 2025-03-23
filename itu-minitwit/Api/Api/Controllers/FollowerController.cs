@@ -84,6 +84,7 @@ public class FollowerController(IFollowService followService, ILatestService lat
             return NotFound(e.Message);
         }
 
+        metrics.UnfollowCounter.Add(1);
         return NoContent();
     }
 
