@@ -9,4 +9,5 @@ public class MetricsConfig
     static readonly Meter Meter = new (ServiceName, ServiceVersion);
     public readonly Counter<int> MessagesCounter = Meter.CreateCounter<int>("messages_total");
     public readonly Counter<int> RegisterCounter = Meter.CreateCounter<int>("registers_total");
+    public readonly Counter<int> FollowCounter = Meter.CreateCounter<int>("follows_total");
 }
