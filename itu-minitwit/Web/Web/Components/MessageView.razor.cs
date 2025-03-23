@@ -10,7 +10,7 @@ public class MessageViewBase : ComponentBase
     // [Parameter] public int page { get; set; } = 1;
 
     [Parameter] public IEnumerable<DisplayMessageDto> Messages { get; set; } = new List<DisplayMessageDto>();
-    protected MessageGroup MessageGroup { get; set; } = new MessageGroup();
+    protected MessageGroup MessageGroup { get; } = new MessageGroup();
     // protected override async Task OnInitializedAsync()
     // {
     //     var messages = new List<DisplayMessageDto>();
