@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Web.DataAccess.Abstract;
 using Web.Services.DTO_s;
@@ -12,8 +13,11 @@ public class UserRepository (HttpClient httpClient, IConfiguration configuration
     public async Task<(bool, string ErrorMessage)> Register(RegisterDto dto)
     {
        var response = await HttpClient.PostAsJsonAsync($"{ApiBaseUrl}/Register", dto);
-       return response.IsSuccessStatusCode ? (true, string.Empty) 
-           : (false, await response.Content.ReadAsStringAsync());
+       if (response.IsSuccessStatusCode) return (true, string.Empty);
+       var json = await response.Content.ReadAsStringAsync();
+       using var doc = JsonDocument.Parse(json);
+       var errorMessage = doc.RootElement.GetProperty("error_msg").GetString();
+       return (false, errorMessage ?? "An error happened that could not be read");
     }
 
     public async Task<bool> Login(LoginUserDTO dto)
