@@ -7,7 +7,7 @@ using Api.Services.Services;
 namespace Api.Controllers;
 
 [Route("api/")]
-public class MessageController(IMessageService db, ILatestService latestService, ILogger<MessageController> logger) : Controller
+public class MessageController(IMessageService db, ILatestService latestService, ILogger<MessageController> logger, MetricsConfig metrics) : Controller
 {
 
     [LogMethodParameters]
@@ -82,6 +82,7 @@ public class MessageController(IMessageService db, ILatestService latestService,
             await latestService.UpdateLatest(latest);
             
             await db.PostMessage(username, messageDto.Content);
+            metrics.MessagesCounter.Add(1);
             return NoContent();
         }
         catch (KeyNotFoundException e)
