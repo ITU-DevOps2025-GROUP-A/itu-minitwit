@@ -9,7 +9,7 @@ namespace Api.Controllers;
 
 [Route("api/")]
 [ApiController]
-public class FollowerController(IFollowService followService, ILatestService latestService, ILogger<FollowerController> logger) : ControllerBase
+public class FollowerController(IFollowService followService, ILatestService latestService, ILogger<FollowerController> logger, MetricsConfig metrics) : ControllerBase
 {
     [LogMethodParameters]
     [LogReturnValueAsync]
@@ -66,6 +66,7 @@ public class FollowerController(IFollowService followService, ILatestService lat
             return NotFound(e.Message);
         }
 
+        metrics.FollowCounter.Add(1);
         return NoContent();
     }
     
@@ -83,6 +84,7 @@ public class FollowerController(IFollowService followService, ILatestService lat
             return NotFound(e.Message);
         }
 
+        metrics.UnfollowCounter.Add(1);
         return NoContent();
     }
 

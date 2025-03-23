@@ -11,7 +11,8 @@ namespace Api.Controllers;
 public class RegisterController(
     IUserService userService,
     ILatestService latestService,
-    ILogger<RegisterController> logger)
+    ILogger<RegisterController> logger, 
+    MetricsConfig metrics)
     : ControllerBase
 {
     [LogMethodParameters]
@@ -59,6 +60,7 @@ public class RegisterController(
             return StatusCode(500, "An error occured, that we did not for see");
         }
 
+        metrics.RegisterCounter.Add(1);
         return NoContent();
     }
 }
