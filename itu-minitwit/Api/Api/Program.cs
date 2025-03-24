@@ -56,6 +56,11 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MinitwitDbContext>(options =>
     options.UseSqlite(connection));
 
+// Configure logging
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+
 // // Configure Serilog
 // var logFolder = builder.Configuration["LogLocation:LogFolder"];
 // var  outputTemplate = new ExpressionTemplate("[{@t:HH:mm:ss} {@l:u3} {Substring(SourceContext, LastIndexOf(SourceContext, '.') + 1)}] {@m}\n{@x}");
@@ -108,11 +113,11 @@ builder.Services.AddDbContext<MinitwitDbContext>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
 //apply pending migration
 using (var scope = app.Services.CreateScope())
