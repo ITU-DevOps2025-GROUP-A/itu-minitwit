@@ -11,8 +11,8 @@ public interface IUserService
 
 public class UserService(IUserRepository userRepository) : IUserService
 {
-    [LogMethodParameters]
-    [LogReturnValue]
+    // [LogMethodParameters]
+    // [LogReturnValue]
     public Task<ReadUserDTO> Register(CreateUserDTO createUserDto)
     {
         return userRepository.Register(createUserDto);

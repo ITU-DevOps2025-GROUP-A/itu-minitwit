@@ -7,7 +7,7 @@ namespace Api.DataAccess.Repositories;
 
 public class LatestRepository(MinitwitDbContext dbContext) : ILatestRepository
 {
-    [LogReturnValue]
+    // [LogReturnValue]
     public async Task<int> GetLatest()
     {
         var latestProcessedCommandId = await dbContext.LatestProcessedSimActions
@@ -17,7 +17,7 @@ public class LatestRepository(MinitwitDbContext dbContext) : ILatestRepository
         return latestProcessedCommandId.Latest;
     }
 
-    [LogMethodParameters]
+    // [LogMethodParameters]
     public async Task UpdateLatest(int latest)
     {
         var latestObj = await dbContext.LatestProcessedSimActions.FirstOrDefaultAsync();

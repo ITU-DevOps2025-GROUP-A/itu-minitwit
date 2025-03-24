@@ -10,7 +10,7 @@ namespace Api.DataAccess.Repositories;
 
 public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepository> logger) : IMessageRepository
 {
-    [LogMethodParameters]
+    // [LogMethodParameters]
     public async Task<List<DisplayMessageDTO>> ReadMessages(int pagesize)
     {
         if(!await dbContext.Messages.AnyAsync()) return Enumerable.Empty<DisplayMessageDTO>().ToList();
@@ -30,14 +30,14 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
             .ToListAsync();
     }
 
-    [LogMethodParameters]
+    // [LogMethodParameters]
     public async Task<List<DisplayMessageDTO>> ReadFilteredMessages(string username, int pagesize = 100)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
         if (user == null)
         {
             var e = new UserDoesntExistException($"User \"{username}\" not found");
-            logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
             throw e;
         }
         
@@ -82,8 +82,8 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
             .ToListAsync();
     }
 
-    [LogMethodParameters]
-    [LogReturnValue]
+    // [LogMethodParameters]
+    // [LogReturnValue]
     public async Task<bool> PostMessage(string username, string content)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
@@ -91,7 +91,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
         if (user == null)
         {
             var e = new KeyNotFoundException($"User \"{username}\" not found");
-            logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
             throw e;
         }
 

@@ -12,22 +12,22 @@ public interface IFollowService
 
 public class FollowService(IFollowRepository followRepository) : IFollowService
 {
-    [LogMethodParameters]
-    [LogReturnValue]
+    // [LogMethodParameters]
+    // [LogReturnValue]
     public Task FollowUser(string username, string follow)
     {
         return followRepository.Follow(username, follow);
     }
 
-    [LogMethodParameters]
-    [LogReturnValue]
+    // [LogMethodParameters]
+    // [LogReturnValue]
     public Task UnfollowUser(string username, string unfollow)
     {
         return followRepository.Unfollow(username, unfollow);
     }
 
-    [LogMethodParameters]
-    [LogReturnValue]
+    // [LogMethodParameters]
+    // [LogReturnValue]
     public IEnumerable<string> GetFollows(string username, int no)
     {
         return followRepository.GetFollows(username, no).Result;

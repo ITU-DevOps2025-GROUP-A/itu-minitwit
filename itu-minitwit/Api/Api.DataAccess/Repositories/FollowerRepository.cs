@@ -11,8 +11,8 @@ namespace Api.DataAccess.Repositories;
 
 public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowRepository> logger) : IFollowRepository
 {
-    [LogMethodParameters]
-    [LogReturnValueAsync]
+    // [LogMethodParameters]
+    // [LogReturnValueAsync]
     public async Task Follow(string username, string follow)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
@@ -21,7 +21,7 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null || userToFollow == null)
         {
             var e =new UserDoesntExistException($"\"{username}\" not found");
-            logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
             throw e;
         }
         
@@ -39,8 +39,8 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         }
     }
 
-    [LogMethodParameters]
-    [LogReturnValueAsync]
+    // [LogMethodParameters]
+    // [LogReturnValueAsync]
     public async Task Unfollow(string username, string unfollow)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
@@ -49,7 +49,7 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null || userToUnfollow == null)
         {
             var e = new UserDoesntExistException($"\"{username}\" not found");
-            logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
             throw e;
         }
         
@@ -64,8 +64,8 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         }
     }
 
-    [LogMethodParameters]
-    [LogReturnValueAsync]
+    // [LogMethodParameters]
+    // [LogReturnValueAsync]
     public async Task<IEnumerable<string>> GetFollows(string username, int no = 100)
     {
         var user = await dbContext.Users
@@ -75,7 +75,7 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e = new UserDoesntExistException("User not found");
-            logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
             throw e;
         }
 
@@ -101,7 +101,7 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e =new UserDoesntExistException($"\"{username}\" not found");
-            logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
             throw e;
         }
 
