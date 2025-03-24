@@ -4,7 +4,7 @@ using Web.Services.DTO_s;
 
 namespace Web.Components;
 
-public class MessageBase : ComponentBase
+public class MessageBase : ComponentBase, IDisposable
 {
     [Parameter]
     public DisplayMessageDto MessageDto { get; set; } = new DisplayMessageDto
@@ -16,26 +16,56 @@ public class MessageBase : ComponentBase
         PubDate = (int)new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()
     };
 
+    [Parameter] public required MessageGroup MessageGroup { get; set; }
+
     [Inject] protected UserState Userstate { get; set; } = null!;
 
     [Inject] protected IFollowService FollowService { get; set; } = null!;
 
     [Inject] private NavigationManager Navigation { get; set; } = null!;
+    
+    protected bool? IsFollowing { get; set; }
 
-    protected bool DoseLoggedInUserFollowUser()
+    protected override async Task OnInitializedAsync()
     {
-        return FollowService.DoesFollow(Userstate.Username!, MessageDto.Username).Result;
+        if (!Userstate.IsLoggedIn) return;
+        if (Userstate.Username == MessageDto.Username) return;
+        Userstate.OnChange += StateHasChangedUserHandler;
+        MessageGroup.Subscribe(StateHasChangedFollowHandler);
+        await UpdateIsFollowing();
     }
 
     protected async Task Follow()
     {
-        await FollowService.Follow(Userstate.Username!, MessageDto.Username);
-        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        await FollowService.Follow(new FollowDto{User = Userstate.Username!, OtherUser = MessageDto.Username});
+        MessageGroup.NotifyStateChanged();
     }
 
     protected async Task Unfollow()
     {
-        await FollowService.UnFollow(Userstate.Username!, MessageDto.Username);
-        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        await FollowService.UnFollow(new FollowDto{User = Userstate.Username!, OtherUser = MessageDto.Username});
+        MessageGroup.NotifyStateChanged();
+    }
+    
+    private async Task UpdateIsFollowing()
+    {
+        IsFollowing = await FollowService.DoesFollow(new FollowDto{User = Userstate.Username!, OtherUser = MessageDto.Username});
+    }
+    
+    private async void StateHasChangedUserHandler()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+    
+    private async void StateHasChangedFollowHandler()
+    {
+        await UpdateIsFollowing();
+        await InvokeAsync(StateHasChanged);
+    }
+    
+    public void Dispose()
+    {
+        Userstate.OnChange -= StateHasChangedUserHandler;
+        MessageGroup.Unsubscribe(StateHasChangedFollowHandler);
     }
 }

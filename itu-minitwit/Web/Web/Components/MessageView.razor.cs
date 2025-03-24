@@ -10,7 +10,7 @@ public class MessageViewBase : ComponentBase
     // [Parameter] public int page { get; set; } = 1;
 
     [Parameter] public IEnumerable<DisplayMessageDto> Messages { get; set; } = new List<DisplayMessageDto>();
-
+    [Parameter] public required MessageGroup MessageGroup { get; set; }
     // protected override async Task OnInitializedAsync()
     // {
     //     var messages = new List<DisplayMessageDto>();
@@ -23,4 +23,22 @@ public class MessageViewBase : ComponentBase
     //     
     //     Messages = messages;
     // }
+
+}
+
+public class MessageGroup
+{
+    private event Action? OnChange;
+    
+    public void NotifyStateChanged() => OnChange?.Invoke();
+    
+    public void Subscribe(Action action)
+    {
+        OnChange += action;
+    }
+    
+    public void Unsubscribe(Action action)
+    {
+        OnChange -= action;
+    }
 }
