@@ -7,14 +7,14 @@ on:
       - main
 
 jobs:
+  format:
+    uses: ./.github/workflows/format-code.yml
+    
   check-for-warnings:
     uses: ./.github/workflows/check-for-warnings.yml
 
   build:
     uses: ./.github/workflows/build.yml
-    
-  format:
-    uses: ./.github/workflows/format-code.yml
 
   test:
     needs: build
