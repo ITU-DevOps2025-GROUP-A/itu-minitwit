@@ -8,6 +8,7 @@ indent_style = space
 
 # Enable/disable specific StyleCop rules
 # Turn off XML doc requirement
+dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SA1600.severity = none
 # Make ordering of using statements a warning
 dotnet_diagnostic.SA1200.severity = warning
