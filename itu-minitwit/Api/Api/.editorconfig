@@ -7,10 +7,14 @@ indent_size = 4
 indent_style = space
 
 # Enable/disable specific StyleCop rules
-# Turn off XML doc requirement
+# Doesnt check for class headers
 dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SA1600.severity = none
+# Doesnt check for code documentation
+dotnet_diagnostic.SA1601.severity = none
+dotnet_diagnostic.SA1024.severity = none
+
 # Make ordering of using statements a warning
-dotnet_diagnostic.SA1200.severity = warning
+dotnet_diagnostic.SA1200.severity = suggestion
 # Treat missing file header as an error
 #dotnet_diagnostic.SA1633.severity = error
