@@ -12,6 +12,9 @@ jobs:
 
   build:
     uses: ./.github/workflows/build.yml
+    
+  format:
+    uses: ./.github/workflows/format-code.yml
 
   test:
     needs: build
