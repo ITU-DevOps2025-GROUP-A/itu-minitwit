@@ -131,10 +131,9 @@ using (var scope = app.Services.CreateScope())
         context.SaveChanges();
     }
 }
+app.UseSerilogRequestLogging();
 
 app.MapPrometheusScrapingEndpoint();
-
-// app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
