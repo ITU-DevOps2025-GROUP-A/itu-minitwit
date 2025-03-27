@@ -1,0 +1,11 @@
+{
+  "settings": {
+    "documentationRules": {
+      "companyName": "NintendoLawyers",
+      "documentInternalElements": true
+    },
+    "orderingRules": {
+      "usingDirectivesPlacement": "insideNamespace"
+    }
+  }
+}
