@@ -1,0 +1,18 @@
+# Root of the editor config
+root = true
+
+# Use spaces instead of tabs
+[*.cs]
+indent_size = 4
+indent_style = space
+
+# Enable/disable specific StyleCop rules
+# Doesnt check for class headers
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1600.severity = none
+# Doesnt check for code documentation
+dotnet_diagnostic.SA1601.severity = none
+dotnet_diagnostic.SA1024.severity = none
+
+# Make ordering of using statements a warning
+dotnet_diagnostic.SA1200.severity = suggestion
