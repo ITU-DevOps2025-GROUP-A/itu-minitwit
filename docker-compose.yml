@@ -64,9 +64,12 @@ services:
       - 8081:80
     networks:
       - monitoring
+    volumes:
+      - seq_data:/data
 
 volumes:
   db-data:
   logs:
   prometheus-data:
   grafana-data:
+  seq_data:
