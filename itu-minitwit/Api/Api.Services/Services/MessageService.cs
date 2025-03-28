@@ -1,4 +1,5 @@
 using Api.Services.Dto_s.MessageDTO_s;
+using Api.Services.LogDecorator;
 using Api.Services.RepositoryInterfaces;
 
 namespace Api.Services.Services;
@@ -14,13 +15,15 @@ public interface IMessageService
 
 public class MessageService(IMessageRepository repository) : IMessageService
 {
-    // [LogMethodParameters]
+    [LogTime]
+    [LogMethodParameters]
     public Task<List<DisplayMessageDTO>> ReadMessages(int pagesize)
     {
         return repository.ReadMessages(pagesize);
     }
     
-    // [LogMethodParameters]
+    [LogTime]
+    [LogMethodParameters]
     public Task<List<DisplayMessageDTO>> ReadFilteredMessages(string username, int pagesize)
     {
         return repository.ReadFilteredMessages(username, pagesize);
@@ -31,8 +34,9 @@ public class MessageService(IMessageRepository repository) : IMessageService
         return repository.ReadFilteredMessagesFromUserAndFollows(username, pagesize);
     }
 
-    // [LogMethodParameters]
-    // [LogReturnValue]
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValue]
     public Task<bool> PostMessage(string username, string content)
     {
         return repository.PostMessage(username, content);
