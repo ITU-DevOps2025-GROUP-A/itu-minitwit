@@ -24,13 +24,13 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
         if(userToFollow == null)
         {
             var e =new UserDoesntExistException($"User: \"{follow}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
         
@@ -59,13 +59,13 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
         if(userToUnfollow == null)
         {
             var e =new UserDoesntExistException($"User: \"{unfollow}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
         
@@ -92,7 +92,7 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
 
@@ -121,14 +121,14 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e =new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
 
         if (potentialFollowUser == null)
         {
             var e =new UserDoesntExistException($"User: \"{potentialFollow}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
 

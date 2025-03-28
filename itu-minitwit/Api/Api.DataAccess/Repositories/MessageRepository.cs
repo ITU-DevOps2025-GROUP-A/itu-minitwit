@@ -41,7 +41,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
         
@@ -69,7 +69,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
 
@@ -102,7 +102,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
 

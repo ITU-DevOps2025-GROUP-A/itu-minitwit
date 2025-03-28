@@ -16,4 +16,17 @@ public static class LoggerExtension
         
         logger.LogError("{message}, {ErrorName}, Message:\"{ErrorMessage}\", {@Error}", message, e.GetType().Name, e.Message, e);
     }
+
+    public static void LogThrowingException(this ILogger logger, Exception e, string message = "")
+    {
+        ArgumentNullException.ThrowIfNull(logger);
+        
+        if(string.IsNullOrWhiteSpace(message))
+        {
+            logger.LogInformation("Throwing: {ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            return;
+        }
+        
+        logger.LogInformation("Throwing: {ErrorName}, {message}, Message:\"{ErrorMessage}\", {@Error}", message, e.GetType().Name, e.Message, e);
+    }
 }

@@ -29,7 +29,7 @@ public class UserRepository(MinitwitDbContext db, IPasswordHasher<User> password
         if (await db.Users.AnyAsync(u => u.Username == user.Username))
         {
             var e = new UserAlreadyExists($"User \"{user.Username}\" already exists");
-            logger.LogException(e);
+            logger.LogThrowingException(e);
             throw e;
         }
         
