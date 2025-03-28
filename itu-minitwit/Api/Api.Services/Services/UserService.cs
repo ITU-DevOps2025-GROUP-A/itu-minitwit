@@ -20,6 +20,9 @@ public class UserService(IUserRepository userRepository) : IUserService
         return userRepository.Register(createUserDto);
     }
 
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValue]
     public Task<bool> Login(LoginUserDTO dto)
     {
         return userRepository.Login(dto);

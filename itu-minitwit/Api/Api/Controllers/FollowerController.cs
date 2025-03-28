@@ -120,11 +120,27 @@ public class FollowerController(IFollowService followService, ILatestService lat
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }
-
+    
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValueAsync]
     [HttpGet("fllws/{username}/{potentialFollow}")]
     public async Task<IActionResult> DoesFollow(string username, string potentialFollow)
     {
-        if (username == potentialFollow) return BadRequest("You can't follow yourself");
-        return Ok (await followService.DoesFollow(username, potentialFollow));
+        try
+        {
+            if (username == potentialFollow) return BadRequest("You can't follow yourself");
+            return Ok (await followService.DoesFollow(username, potentialFollow));
+        }
+        catch (UserDoesntExistException e)
+        {
+            logger.LogException(e);
+            return NotFound(new { message = e.Message });
+        }
+        catch (Exception e)
+        {
+            logger.LogException(e, "An error occured, that we have not accounted for");
+            return StatusCode(500, "An error occured, that we did not for see");
+        }
     }
 }

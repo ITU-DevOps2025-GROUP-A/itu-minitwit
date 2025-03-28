@@ -37,6 +37,9 @@ public class FollowService(IFollowRepository followRepository) : IFollowService
         return followRepository.GetFollows(username, no).Result;
     }
 
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValue]
     public Task<bool> DoesFollow(string username, string potentialFollow)
     {
         return followRepository.DoesFollow(username, potentialFollow);

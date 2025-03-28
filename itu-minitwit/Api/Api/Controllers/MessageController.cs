@@ -100,17 +100,33 @@ public class MessageController(IMessageService db, ILatestService latestService,
         }
     }
 
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValueAsync]
     [HttpGet("msgs/fllws/{username}")]
     public async Task<IActionResult> GetFilteredMessagesForUserAndFollows(string username, [FromQuery] int no = 100)
     {
         try
         {
             var messages = await db.ReadFilteredMessagesFromUserAndFollows(username, no);
+            if (messages.Count == 0)
+            {
+                logger.LogInformation("Didn't find any messages");
+                return NoContent();
+            }
+            logger.LogInformation("Found {Message_count} messages, {@First_message}, {@Last_message}"
+                ,messages.Count, messages.First(), messages.Last());
             return Ok(messages);
         }
-        catch (UserDoesntExistException)
+        catch (UserDoesntExistException e)
         {
-            return NotFound("User doesn't exist");
+            logger.LogException(e);
+            return NotFound(new { message = e.Message });
+        }
+        catch (Exception e)
+        {
+            logger.LogException(e, "An error occured, that we have not accounted for");
+            return StatusCode(500, "An error occured, that we did not for see");
         }
     }
 }

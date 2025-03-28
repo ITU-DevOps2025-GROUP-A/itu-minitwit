@@ -109,7 +109,10 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         
         return followsList;
     }
-
+    
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValueAsync]
     public async Task<bool> DoesFollow(string username, string potentialFollow)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
@@ -117,14 +120,15 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
 
         if (user == null)
         {
-            var e =new UserDoesntExistException($"\"{username}\" not found");
-            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            var e =new UserDoesntExistException($"User: \"{username}\" not found");
+            logger.LogException(e);
             throw e;
         }
 
         if (potentialFollowUser == null)
         {
-            var e =new UserDoesntExistException($"\"{potentialFollow}\" not found");
+            var e =new UserDoesntExistException($"User: \"{potentialFollow}\" not found");
+            logger.LogException(e);
             throw e;
         }
 

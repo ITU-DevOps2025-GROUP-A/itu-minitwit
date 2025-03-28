@@ -62,6 +62,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
             .ToListAsync();
     }
 
+    [LogTime]
     public async Task<List<DisplayMessageDTO>> ReadFilteredMessagesFromUserAndFollows(string username, int pagesize = 100)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);

@@ -39,14 +39,25 @@ public class UserRepository(MinitwitDbContext db, IPasswordHasher<User> password
             { UserId = createdUser.Entity.UserId, Username = user.Username, Email = user.Email };
     }
 
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValueAsync]
     public async Task<bool> Login(LoginUserDTO dto)
     {
-        if (!await db.Users.AnyAsync(u => u.Username == dto.Username)) return false;
+        if (!await db.Users.AnyAsync(u => u.Username == dto.Username))
+        {
+            logger.LogInformation($"User: {dto.Username} does not exist");
+        }
 
         var user = (await db.Users.Where(u => u.Username == dto.Username).FirstOrDefaultAsync())!;
         var verifyHashedPassword
             = passwordHasher.VerifyHashedPassword(user, user.PwHash, dto.Password);
 
+        if (verifyHashedPassword == PasswordVerificationResult.Failed)
+        {
+            logger.LogInformation("Password is incorrect");
+        }
+        
         return verifyHashedPassword != PasswordVerificationResult.Failed;
     }
 }
