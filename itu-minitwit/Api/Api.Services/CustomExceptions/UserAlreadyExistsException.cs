@@ -10,12 +10,12 @@ public class UserAlreadyExists : Exception
         
     }
 
-    public UserAlreadyExists(string message)
+    public UserAlreadyExists(string message):base(message)
     {
         
     }
 
-    public UserAlreadyExists(string message, Exception inner)
+    public UserAlreadyExists(string message, Exception inner):base(message, inner)
     {
         
     }
