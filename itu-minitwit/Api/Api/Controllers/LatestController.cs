@@ -1,4 +1,5 @@
-﻿using Api.Services.Services;
+﻿using Api.Services.LogDecorator;
+using Api.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -7,6 +8,8 @@ namespace Api.Controllers;
 [ApiController]
 public class LatestController(ILatestService latestService) : ControllerBase
 {
+    [LogTime]
+    [LogReturnValueAsync]
     [HttpGet]
     public async Task<ActionResult> GetLatest()
     {
