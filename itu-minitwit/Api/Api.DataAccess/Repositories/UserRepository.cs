@@ -2,6 +2,7 @@ using Api.DataAccess.Models;
 using Api.Services.CustomExceptions;
 using Api.Services.Dto_s;
 using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Api.Services.RepositoryInterfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ public class UserRepository(MinitwitDbContext db, IPasswordHasher<User> password
         if (await db.Users.AnyAsync(u => u.Username == user.Username))
         {
             var e = new UserAlreadyExists($"User \"{user.Username}\" already exists");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
         

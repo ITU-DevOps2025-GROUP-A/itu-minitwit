@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Api.Services;
 using Api.Services.Exceptions;
 using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Api.Services.Services;
 
 namespace Api.Controllers;
@@ -33,7 +34,7 @@ public class MessageController(IMessageService db, ILatestService latestService,
         }
         catch (Exception e)
         {
-            logger.LogError("An error occured, that we did have not accounted for, {@Error}", e);
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see, {e}");
         }
     }
@@ -49,7 +50,7 @@ public class MessageController(IMessageService db, ILatestService latestService,
             logger.LogInformation("Updating latest: {Latest}", latest?.ToString() ?? "null");
             await latestService.UpdateLatest(latest);
             
-            var filteredMessages = await db.ReadFilteredMessages(username, 100);
+            var filteredMessages = await db.ReadFilteredMessages(username, no);
             if (filteredMessages.Count == 0)
             {
                 logger.LogInformation("Didn't find any messages");
@@ -61,12 +62,12 @@ public class MessageController(IMessageService db, ILatestService latestService,
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError("Couldn't find user, {@Error}", e);
+            logger.LogException(e);
             return NotFound(new { message = e.Message });
         }
         catch (Exception e)
         {
-            logger.LogError("An error occured, that we did have not accounted for, {@Error}", e);
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }
@@ -89,12 +90,12 @@ public class MessageController(IMessageService db, ILatestService latestService,
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError("Couldn't find user, {@Error}", e);
+            logger.LogException(e);
             return NotFound(new { message = e.Message });
         }
         catch (Exception e)
         {
-            logger.LogError("An error occured, that we did have not accounted for, {@Error}", e);
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }

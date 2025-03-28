@@ -4,6 +4,7 @@ using Api.DataAccess.Models;
 using Api.Services;
 using Api.Services.CustomExceptions;
 using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog.Core;
@@ -23,13 +24,13 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
         if(userToFollow == null)
         {
             var e =new UserDoesntExistException($"User: \"{follow}\" not found");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
         
@@ -58,13 +59,13 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
         if(userToUnfollow == null)
         {
             var e =new UserDoesntExistException($"User: \"{unfollow}\" not found");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
         
@@ -91,7 +92,7 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
 

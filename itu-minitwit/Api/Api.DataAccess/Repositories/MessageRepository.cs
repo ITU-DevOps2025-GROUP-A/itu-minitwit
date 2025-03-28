@@ -3,6 +3,7 @@ using Api.Services;
 using Api.Services.Dto_s.MessageDTO_s;
 using Api.Services.Exceptions;
 using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Api.Services.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
         
@@ -67,7 +68,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
 
@@ -100,7 +101,7 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
         if (user == null)
         {
             var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            logger.LogException(e);
             throw e;
         }
 

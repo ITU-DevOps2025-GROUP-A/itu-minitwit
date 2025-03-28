@@ -2,6 +2,7 @@
 using Api.Services.CustomExceptions;
 using Api.Services.Dto_s;
 using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Api.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,7 +59,7 @@ public class RegisterController(
         }
         catch (Exception e)
         {
-            logger.LogError("An error occured, that we did have not accounted for, {@Error}", e);
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
 

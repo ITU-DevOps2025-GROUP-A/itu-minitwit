@@ -3,6 +3,7 @@ using Api.Services.CustomExceptions;
 using Api.Services.Dto_s.FollowDTO_s;
 using Api.Services.Exceptions;
 using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Api.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +52,7 @@ public class FollowerController(IFollowService followService, ILatestService lat
         } 
         catch (Exception e)
         {
-            logger.LogError("An error occured, that we did have not accounted for, {@Error}", e);
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }
@@ -67,7 +68,7 @@ public class FollowerController(IFollowService followService, ILatestService lat
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError("User does not exists, {@Error}", e);
+            logger.LogException(e);
             return NotFound(e.Message);
         }
 
@@ -86,7 +87,7 @@ public class FollowerController(IFollowService followService, ILatestService lat
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError("User does not exists, {@Error}", e);
+            logger.LogException(e);
             return NotFound(e.Message);
         }
 
@@ -110,12 +111,12 @@ public class FollowerController(IFollowService followService, ILatestService lat
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError("User does not exists, {@Error}", e);
+            logger.LogException(e);
             return NotFound(new { message = e.Message });
         }
         catch (Exception e)
         {
-            logger.LogError("An error occured, that we did have not accounted for, {@Error}", e);
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }
