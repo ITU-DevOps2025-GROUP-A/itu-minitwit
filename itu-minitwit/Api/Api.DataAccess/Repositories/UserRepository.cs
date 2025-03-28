@@ -1,17 +1,24 @@
 using Api.DataAccess.Models;
 using Api.Services.CustomExceptions;
 using Api.Services.Dto_s;
+using Api.Services.LogDecorator;
 using Api.Services.RepositoryInterfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Api.DataAccess.Repositories;
 
-public class UserRepository(MinitwitDbContext db, IPasswordHasher<User> passwordHasher) : IUserRepository
+public class UserRepository(MinitwitDbContext db, IPasswordHasher<User> passwordHasher, ILogger<UserRepository> logger) : IUserRepository
 {
+    
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValueAsync]
     public async Task<ReadUserDTO> Register(CreateUserDTO createUserDto)
     {
-        User user = new User
+        var user = new User
         {
             Username = createUserDto.Username,
             Email = createUserDto.Email,
@@ -19,7 +26,11 @@ public class UserRepository(MinitwitDbContext db, IPasswordHasher<User> password
         user.PwHash = passwordHasher.HashPassword(user, createUserDto.Pwd);
 
         if (await db.Users.AnyAsync(u => u.Username == user.Username))
-            throw new UserAlreadyExists($"User \"{user.Username}\" already exists");
+        {
+            var e = new UserAlreadyExists($"User \"{user.Username}\" already exists");
+            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            throw e;
+        }
         
         var createdUser = await db.Users.AddAsync(user);
         await db.SaveChangesAsync();

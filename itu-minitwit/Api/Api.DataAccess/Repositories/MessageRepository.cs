@@ -2,6 +2,7 @@ using Api.DataAccess.Models;
 using Api.Services;
 using Api.Services.Dto_s.MessageDTO_s;
 using Api.Services.Exceptions;
+using Api.Services.LogDecorator;
 using Api.Services.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,8 @@ namespace Api.DataAccess.Repositories;
 
 public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepository> logger) : IMessageRepository
 {
-    // [LogMethodParameters]
+    [LogTime]
+    [LogMethodParameters]
     public async Task<List<DisplayMessageDTO>> ReadMessages(int pagesize)
     {
         if(!await dbContext.Messages.AnyAsync()) return Enumerable.Empty<DisplayMessageDTO>().ToList();
@@ -30,14 +32,15 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
             .ToListAsync();
     }
 
-    // [LogMethodParameters]
+    [LogTime]
+    [LogMethodParameters]
     public async Task<List<DisplayMessageDTO>> ReadFilteredMessages(string username, int pagesize = 100)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
         if (user == null)
         {
-            var e = new UserDoesntExistException($"User \"{username}\" not found");
-            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            var e = new UserDoesntExistException($"User: \"{username}\" not found");
+            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
             throw e;
         }
         
@@ -61,7 +64,12 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
     public async Task<List<DisplayMessageDTO>> ReadFilteredMessagesFromUserAndFollows(string username, int pagesize = 100)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
-        if (user == null) throw new UserDoesntExistException($"User \"{username}\" not found");
+        if (user == null)
+        {
+            var e = new UserDoesntExistException($"User: \"{username}\" not found");
+            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
+            throw e;
+        }
 
         if(!await dbContext.Messages.AnyAsync()) return Enumerable.Empty<DisplayMessageDTO>().ToList();
         
@@ -82,16 +90,17 @@ public class MessageRepository(MinitwitDbContext dbContext, ILogger<MessageRepos
             .ToListAsync();
     }
 
-    // [LogMethodParameters]
-    // [LogReturnValue]
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValue]
     public async Task<bool> PostMessage(string username, string content)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
 
         if (user == null)
         {
-            var e = new KeyNotFoundException($"User \"{username}\" not found");
-            // logger.LogError($"{e.Message} - throw: {e.GetType()}");
+            var e = new UserDoesntExistException($"User: \"{username}\" not found");
+            logger.LogError("{ErrorName}, Message:\"{ErrorMessage}\", {@Error}", e.GetType().Name, e.Message, e);
             throw e;
         }
 
