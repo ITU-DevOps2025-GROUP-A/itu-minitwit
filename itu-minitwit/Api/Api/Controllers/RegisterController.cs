@@ -31,7 +31,7 @@ public class RegisterController(
             if (string.IsNullOrWhiteSpace(request.Username))
             {
                 logger.LogError("Invalid username: \"{Username}\"", request.Username);
-                return BadRequest(new {error_msg = "You have to enter a valid username"});
+                return BadRequest(new {error_msg = "You have to enter a username"});
             }
 
             if (string.IsNullOrWhiteSpace(request.Email) || !request.Email.Contains('@'))
@@ -43,7 +43,7 @@ public class RegisterController(
             if (string.IsNullOrWhiteSpace(request.Pwd))
             {
                 logger.LogError("Invalid password: \"{Pwd}\"", request.Pwd);
-                return BadRequest(new {error_msg  = "You have to enter a valid password"});
+                return BadRequest(new {error_msg  = "You have to enter a password"});
             }
 
             try
