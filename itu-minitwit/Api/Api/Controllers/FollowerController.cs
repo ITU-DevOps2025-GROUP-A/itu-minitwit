@@ -2,6 +2,8 @@ using Api.Services;
 using Api.Services.CustomExceptions;
 using Api.Services.Dto_s.FollowDTO_s;
 using Api.Services.Exceptions;
+using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Api.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +13,7 @@ namespace Api.Controllers;
 [ApiController]
 public class FollowerController(IFollowService followService, ILatestService latestService, ILogger<FollowerController> logger, MetricsConfig metrics) : ControllerBase
 {
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValueAsync]
     [HttpPost("fllws/{username}")]
@@ -19,13 +22,14 @@ public class FollowerController(IFollowService followService, ILatestService lat
         try
         {
             await latestService.UpdateLatest(latest);
-            logger.LogInformation($"Updating latest: {latest?.ToString() ?? "null"}");
+            logger.LogInformation("Updating latest: {Latest}", latest?.ToString() ?? "null");
         
             if (!String.IsNullOrWhiteSpace(followDto.Follow))
             {
                 if (username == followDto.Follow)
                 {
-                    logger.LogError("You cannot follow yourself");
+                    logger.LogError("You cannot follow yourself, (User: {Username}), (Follow: {Follow})"
+                        ,username, followDto.Follow);
                     return BadRequest("You cannot follow yourself");
                 }
                 
@@ -35,7 +39,8 @@ public class FollowerController(IFollowService followService, ILatestService lat
             {
                 if (username == followDto.Unfollow)
                 {
-                    logger.LogError("You cannot unfollow yourself");
+                    logger.LogError("You cannot follow yourself, (User: {Username}), (Unfollow: {Unfollow})"
+                        ,username, followDto.Follow);
                     return BadRequest("You cannot unfollow yourself");
                 }
                 
@@ -47,11 +52,12 @@ public class FollowerController(IFollowService followService, ILatestService lat
         } 
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured, that we did have not accounted for");
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }
 
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValueAsync]
     private async Task<ActionResult> Follow(string username, string follow)
@@ -62,7 +68,7 @@ public class FollowerController(IFollowService followService, ILatestService lat
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError(e, "User does not exists");
+            logger.LogException(e);
             return NotFound(e.Message);
         }
 
@@ -70,6 +76,7 @@ public class FollowerController(IFollowService followService, ILatestService lat
         return NoContent();
     }
     
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValueAsync]
     private async Task<ActionResult> Unfollow(string username, string unfollow)
@@ -80,14 +87,15 @@ public class FollowerController(IFollowService followService, ILatestService lat
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError(e, "User does not exists");
+            logger.LogException(e);
             return NotFound(e.Message);
         }
 
         metrics.UnfollowCounter.Add(1);
         return NoContent();
     }
-
+    
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValueAsync]
     [HttpGet("fllws/{username}")]
@@ -96,28 +104,43 @@ public class FollowerController(IFollowService followService, ILatestService lat
         try
         {
             await latestService.UpdateLatest(latest);
-            logger.LogInformation($"Updating latest: {latest?.ToString() ?? "null"}");
+            logger.LogInformation("Updating latest: {Latest}", latest?.ToString() ?? "null");
 
             var follows = followService.GetFollows(username, no);
             return Ok(new { follows });
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError(e, $"\"{username}\" does not exists");
+            logger.LogException(e);
             return NotFound(new { message = e.Message });
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured, that we did have not accounted for");
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }
-
+    
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValueAsync]
     [HttpGet("fllws/{username}/{potentialFollow}")]
     public async Task<IActionResult> DoesFollow(string username, string potentialFollow)
     {
-        if (username == potentialFollow) return BadRequest("You can't follow yourself");
-        return Ok (await followService.DoesFollow(username, potentialFollow));
+        try
+        {
+            if (username == potentialFollow) return BadRequest("You can't follow yourself");
+            return Ok (await followService.DoesFollow(username, potentialFollow));
+        }
+        catch (UserDoesntExistException e)
+        {
+            logger.LogException(e);
+            return NotFound(new { message = e.Message });
+        }
+        catch (Exception e)
+        {
+            logger.LogException(e, "An error occured, that we have not accounted for");
+            return StatusCode(500, "An error occured, that we did not for see");
+        }
     }
-
 }

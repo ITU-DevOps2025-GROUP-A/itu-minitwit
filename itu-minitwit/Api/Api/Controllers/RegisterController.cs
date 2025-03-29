@@ -1,6 +1,8 @@
 ﻿using Api.Services;
 using Api.Services.CustomExceptions;
 using Api.Services.Dto_s;
+using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Api.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +17,7 @@ public class RegisterController(
     MetricsConfig metrics)
     : ControllerBase
 {
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValueAsync]
     [HttpPost]
@@ -22,24 +25,24 @@ public class RegisterController(
     {
         try
         {
-            logger.LogInformation($"Updating latest: {latest?.ToString() ?? "null"}");
+            logger.LogInformation("Updating latest: {Latest}", latest?.ToString() ?? "null");
             await latestService.UpdateLatest(latest);
 
             if (string.IsNullOrWhiteSpace(request.Username))
             {
-                logger.LogError($"Invalid username: \"{request.Username}\"");
+                logger.LogError("Invalid username: \"{Username}\"", request.Username);
                 return BadRequest(new {error_msg = "You have to enter a username"});
             }
 
             if (string.IsNullOrWhiteSpace(request.Email) || !request.Email.Contains('@'))
             {
-                logger.LogError($"Invalid email: \"{request.Email}\"");
+                logger.LogError("Invalid email: \"{Email}\"", request.Email);
                 return BadRequest(new {error_msg = "You have to enter a valid email address"});
             }
 
             if (string.IsNullOrWhiteSpace(request.Pwd))
             {
-                logger.LogError($"Invalid password: \"{request.Pwd}\"");
+                logger.LogError("Invalid password: \"{Pwd}\"", request.Pwd);
                 return BadRequest(new {error_msg  = "You have to enter a password"});
             }
 
@@ -50,13 +53,13 @@ public class RegisterController(
             }
             catch (UserAlreadyExists e)
             {
-                logger.LogError(e, $"User \"{request.Username}\" is already registered");
+                logger.LogError("User already exists, {@Error}", e);
                 return BadRequest(new {error_msg = "The username is already taken"});
             }
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured, that we did have not accounted for");
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
 

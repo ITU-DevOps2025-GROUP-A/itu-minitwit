@@ -34,6 +34,7 @@ services:
     depends_on:
       - grafana
       - prometheus
+      - seq
       
   prometheus:
     restart: on-failure:5
@@ -56,9 +57,23 @@ services:
       - monitoring
     volumes:
       - grafana-data:/var/lib/grafana
-      
+
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8081:80
+    networks:
+      - monitoring
+    volumes:
+      - seq_data:/data
+
 volumes:
   db-data:
   logs:
   prometheus-data:
   grafana-data:
+  seq_data:
