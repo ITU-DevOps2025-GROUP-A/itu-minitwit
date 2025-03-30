@@ -12,13 +12,16 @@
         </div>
         @if (Userstate.IsLoggedIn && Userstate.Username != MessageDto.Username)
         {
-            if (DoseLoggedInUserFollowUser())
+            if (IsFollowing != null)
             {
-                <button class="btn btn-unfollow rounded" @onclick="Unfollow">Unfollow</button>     
-            }
-            else
-            {
-                <button class="btn btn-follow rounded" @onclick="Follow">Follow</button>
+                if ((bool)IsFollowing)
+                {
+                    <button class="btn btn-unfollow rounded" @onclick="Unfollow">Unfollow</button>
+                }
+                else
+                {
+                    <button class="btn btn-follow rounded" @onclick="Follow">Follow</button>
+                }
             }
         }
     </div>

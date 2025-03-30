@@ -21,6 +21,7 @@ builder.Services.AddSingleton<UserState>();
 //repository's
 builder.Services.AddHttpClient<IMessageRepository, MessageRepository>();
 builder.Services.AddHttpClient<IUserRepository, UserRepository>();
+builder.Services.AddHttpClient<IFollowRepository, FollowRepository>();
 
 //services
 builder.Services.AddScoped<IMessageService, MessageService>();
