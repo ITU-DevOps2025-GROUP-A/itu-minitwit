@@ -7,12 +7,12 @@ public class UserDoesntExistException : Exception
         
     }
 
-    public UserDoesntExistException(string message)
+    public UserDoesntExistException(string message):base(message)
     {
         
     }
 
-    public UserDoesntExistException(string message, Exception inner)
+    public UserDoesntExistException(string message, Exception inner):base(message, inner)
     {
         
     }

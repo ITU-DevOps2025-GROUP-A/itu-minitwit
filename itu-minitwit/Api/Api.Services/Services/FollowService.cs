@@ -1,3 +1,4 @@
+using Api.Services.LogDecorator;
 using Api.Services.RepositoryInterfaces;
 
 namespace Api.Services.Services;
@@ -12,6 +13,7 @@ public interface IFollowService
 
 public class FollowService(IFollowRepository followRepository) : IFollowService
 {
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValue]
     public Task FollowUser(string username, string follow)
@@ -19,6 +21,7 @@ public class FollowService(IFollowRepository followRepository) : IFollowService
         return followRepository.Follow(username, follow);
     }
 
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValue]
     public Task UnfollowUser(string username, string unfollow)
@@ -26,6 +29,7 @@ public class FollowService(IFollowRepository followRepository) : IFollowService
         return followRepository.Unfollow(username, unfollow);
     }
 
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValue]
     public IEnumerable<string> GetFollows(string username, int no)
@@ -33,6 +37,9 @@ public class FollowService(IFollowRepository followRepository) : IFollowService
         return followRepository.GetFollows(username, no).Result;
     }
 
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValue]
     public Task<bool> DoesFollow(string username, string potentialFollow)
     {
         return followRepository.DoesFollow(username, potentialFollow);

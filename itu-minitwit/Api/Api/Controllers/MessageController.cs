@@ -2,6 +2,8 @@ using Api.Services.Dto_s.MessageDTO_s;
 using Microsoft.AspNetCore.Mvc;
 using Api.Services;
 using Api.Services.Exceptions;
+using Api.Services.LogDecorator;
+using Api.Services.Logging;
 using Api.Services.Services;
 
 namespace Api.Controllers;
@@ -10,6 +12,7 @@ namespace Api.Controllers;
 public class MessageController(IMessageService db, ILatestService latestService, ILogger<MessageController> logger, MetricsConfig metrics) : Controller
 {
 
+    [LogTime]
     [LogMethodParameters]
     [IgnoreAntiforgeryToken]
     [HttpGet("msgs")]
@@ -17,7 +20,7 @@ public class MessageController(IMessageService db, ILatestService latestService,
     {
         try
         {
-            logger.LogInformation($"Updating latest: {latest?.ToString() ?? "null"}");
+            logger.LogInformation("Updating latest: {Latest}", latest?.ToString() ?? "null");
             await latestService.UpdateLatest(latest);
             var messages = await db.ReadMessages(no);
             if (messages.Count == 0)
@@ -25,18 +28,18 @@ public class MessageController(IMessageService db, ILatestService latestService,
                 logger.LogInformation("Didn't find any messages");
                 return NoContent();
             }
-            logger.LogInformation($"Message count: {messages.Count}");
-            logger.LogInformation($"First message: {messages.First()}");
-            logger.LogInformation($"Last message: {messages.Last()}");
+            logger.LogInformation("Found {Message_count} messages, {@First_message}, {@Last_message}"
+                ,messages.Count, messages.First(), messages.Last());
             return Ok(messages);
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured, that we did have not accounted for");
-            return StatusCode(500, "An error occured, that we did not for see");
+            logger.LogException(e, "An error occured, that we have not accounted for");
+            return StatusCode(500, "An error occured, that we did not for see, {e}");
         }
     }
 
+    [LogTime]
     [LogMethodParameters]
     [IgnoreAntiforgeryToken]
     [HttpGet("msgs/{username}")]
@@ -44,32 +47,32 @@ public class MessageController(IMessageService db, ILatestService latestService,
     {
         try
         {
-            logger.LogInformation($"Updating latest: {latest?.ToString() ?? "null"}");
+            logger.LogInformation("Updating latest: {Latest}", latest?.ToString() ?? "null");
             await latestService.UpdateLatest(latest);
             
-            var filteredMessages = await db.ReadFilteredMessages(username, 100);
+            var filteredMessages = await db.ReadFilteredMessages(username, no);
             if (filteredMessages.Count == 0)
             {
                 logger.LogInformation("Didn't find any messages");
                 return NoContent();
             }
-            logger.LogInformation($"Message count: {filteredMessages.Count}");
-            logger.LogInformation($"First message: {filteredMessages.First()}");
-            logger.LogInformation($"Last message: {filteredMessages.Last()}");
+            logger.LogInformation("Found {Message_count} messages, {@First_message}, {@Last_message}"
+                ,filteredMessages.Count, filteredMessages.First(), filteredMessages.Last());
             return Ok(filteredMessages);
         }
         catch (UserDoesntExistException e)
         {
-            logger.LogError(e, $"Couldn't find user: {username}");
+            logger.LogException(e);
             return NotFound(new { message = e.Message });
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured, that we did have not accounted for");
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }
 
+    [LogTime]
     [LogMethodParameters]
     [LogReturnValueAsync]
     [IgnoreAntiforgeryToken]
@@ -78,36 +81,52 @@ public class MessageController(IMessageService db, ILatestService latestService,
     {
         try
         {
-            logger.LogInformation($"Updating latest: {latest?.ToString() ?? "null"}");
+            logger.LogInformation("Updating latest: {Latest}", latest?.ToString() ?? "null");
             await latestService.UpdateLatest(latest);
             
             await db.PostMessage(username, messageDto.Content);
             metrics.MessagesCounter.Add(1);
             return NoContent();
         }
-        catch (KeyNotFoundException e)
+        catch (UserDoesntExistException e)
         {
-            logger.LogError(e, "Couldn't find key");
+            logger.LogException(e);
             return NotFound(new { message = e.Message });
         }
         catch (Exception e)
         {
-            logger.LogError(e, "An error occured, that we did have not accounted for");
+            logger.LogException(e, "An error occured, that we have not accounted for");
             return StatusCode(500, "An error occured, that we did not for see");
         }
     }
 
+    [LogTime]
+    [LogMethodParameters]
+    [LogReturnValueAsync]
     [HttpGet("msgs/fllws/{username}")]
     public async Task<IActionResult> GetFilteredMessagesForUserAndFollows(string username, [FromQuery] int no = 100)
     {
         try
         {
             var messages = await db.ReadFilteredMessagesFromUserAndFollows(username, no);
+            if (messages.Count == 0)
+            {
+                logger.LogInformation("Didn't find any messages");
+                return NoContent();
+            }
+            logger.LogInformation("Found {Message_count} messages, {@First_message}, {@Last_message}"
+                ,messages.Count, messages.First(), messages.Last());
             return Ok(messages);
         }
-        catch (UserDoesntExistException)
+        catch (UserDoesntExistException e)
         {
-            return NotFound("User doesn't exist");
+            logger.LogException(e);
+            return NotFound(new { message = e.Message });
+        }
+        catch (Exception e)
+        {
+            logger.LogException(e, "An error occured, that we have not accounted for");
+            return StatusCode(500, "An error occured, that we did not for see");
         }
     }
 }
