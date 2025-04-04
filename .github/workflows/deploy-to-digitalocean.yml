@@ -27,8 +27,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: 'docker-compose.yml'
-          target: '/minitwit/'
+          source: 'remote_files/'
+          target: '/minitwit/remote_files/'
           overwrite: true
 
       - name: Deploy Application via SSH
@@ -39,4 +39,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /minitwit
+            cd /remote_files
             ./deploy.sh
