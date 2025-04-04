@@ -38,6 +38,5 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /minitwit
-            cd /remote_files
+            cd /minitwit/remote_files
             ./deploy.sh
