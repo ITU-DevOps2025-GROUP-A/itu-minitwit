@@ -11,4 +11,7 @@ public class MetricsConfig
     public readonly Counter<int> RegisterCounter = Meter.CreateCounter<int>("registers_total");
     public readonly Counter<int> FollowCounter = Meter.CreateCounter<int>("follows_total");
     public readonly Counter<int> UnfollowCounter = Meter.CreateCounter<int>("unfollows_total");
+    public readonly Counter<int> CreateFaultyFollow = Meter.CreateCounter<int>("create_faulty_follow");
+    public readonly Counter<int> CreateFaultyFollower = Meter.CreateCounter<int>("create_faulty_follower");
+    public readonly Counter<int> CreateFaultyMessager = Meter.CreateCounter<int>("create_faulty_messager");
 }

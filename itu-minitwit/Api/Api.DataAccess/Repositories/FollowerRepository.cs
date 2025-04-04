@@ -21,15 +21,13 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
         var userToFollow = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == follow);
 
-        if (user == null)
+        if (user == null || userToFollow == null)
         {
-            var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogThrowingException(e);
-            throw e;
-        }
-        if(userToFollow == null)
-        {
-            var e =new UserDoesntExistException($"User: \"{follow}\" not found");
+            var e = new UserDoesntExistException($"User: \"{username}\" not found")
+            {
+                FollowExists = userToFollow != null, 
+                UserExists = user != null
+            };
             logger.LogThrowingException(e);
             throw e;
         }
@@ -56,15 +54,13 @@ public class FollowRepository(MinitwitDbContext dbContext, ILogger<FollowReposit
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
         var userToUnfollow = await dbContext.Users.FirstOrDefaultAsync(u => u.Username == unfollow);
         
-        if (user == null)
+        if (user == null || userToUnfollow == null)
         {
-            var e = new UserDoesntExistException($"User: \"{username}\" not found");
-            logger.LogThrowingException(e);
-            throw e;
-        }
-        if(userToUnfollow == null)
-        {
-            var e =new UserDoesntExistException($"User: \"{unfollow}\" not found");
+            var e = new UserDoesntExistException($"User: \"{username}\" not found")
+            {
+                FollowExists = userToUnfollow != null, 
+                UserExists = user != null
+            };
             logger.LogThrowingException(e);
             throw e;
         }

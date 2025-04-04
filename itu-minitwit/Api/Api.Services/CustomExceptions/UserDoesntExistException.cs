@@ -2,6 +2,9 @@ namespace Api.Services.Exceptions;
 
 public class UserDoesntExistException : Exception
 {
+    public bool UserExists { get; init; }
+    public bool FollowExists { get; init; }
+
     public UserDoesntExistException()
     {
         

@@ -487,4 +487,93 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     }
 
     #endregion
+    
+    #region InsertOldUsers
+
+    [Fact]
+    public async Task SendingMessageCreatesUser()
+    {
+        fixture.ResetDB();
+        var dbContext = fixture.GetDbContext();
+        var messageDto = new CreateMessageDTO
+        {
+            Content = "Hello from Man"
+        };
+
+        var jsonContent = new StringContent(
+            JsonConvert.SerializeObject(messageDto),
+            Encoding.UTF8,
+            "application/json"
+        );
+        // Act
+        await client.PostAsync("/api/msgs/Man", jsonContent);
+        
+        // Assert 
+        var newUser = dbContext.Users.FirstOrDefault(user => user.Username == "Man");
+        Assert.True(dbContext.Users.Contains(newUser));
+        
+    }
+
+    [Fact]
+
+    public async Task FollowingCreatesUsers()
+    {
+        // Arrange
+        fixture.ResetDB();
+        var dbContext = fixture.GetDbContext();
+
+        // Prepare the DTO with the follow action
+        var followDto = new FollowDTO
+        {
+            Follow = "tester",  
+        };
+
+        var jsonContent = new StringContent(
+            JsonConvert.SerializeObject(followDto),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        // Act
+        await client.PostAsync("/api/fllws/test", jsonContent);
+        // Assert 
+        var newUser = dbContext.Users.FirstOrDefault(user => user.Username == "test");
+        var newUser2 = dbContext.Users.FirstOrDefault(user => user.Username == "tester");
+        Assert.True(dbContext.Users.Contains(newUser));
+        Assert.True(dbContext.Users.Contains(newUser2));
+
+
+    }
+    
+    [Fact]
+    public async Task UnFollowingCreatesUsers()
+    {
+        // Arrange
+        fixture.ResetDB();
+        var dbContext = fixture.GetDbContext();
+
+        // Prepare the DTO with the follow action
+        var followDto = new FollowDTO
+        {
+            Unfollow = "tester",  
+        };
+
+        var jsonContent = new StringContent(
+            JsonConvert.SerializeObject(followDto),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        // Act
+        await client.PostAsync("/api/fllws/test", jsonContent);
+        // Assert 
+        var newUser = dbContext.Users.FirstOrDefault(user => user.Username == "test");
+        var newUser2 = dbContext.Users.FirstOrDefault(user => user.Username == "tester");
+        Assert.True(dbContext.Users.Contains(newUser));
+        Assert.True(dbContext.Users.Contains(newUser2));
+        
+        
+    }
+
+    #endregion
 }
