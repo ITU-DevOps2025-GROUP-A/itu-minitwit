@@ -30,7 +30,6 @@ services:
       - monitoring
     volumes:
       - db-data:/itu-minitwit/minitwit.Api/data
-      - logs:/itu-minitwit/minitwit.Api/logs
     depends_on:
       - grafana
       - prometheus
@@ -73,7 +72,6 @@ services:
 
 volumes:
   db-data:
-  logs:
   prometheus-data:
   grafana-data:
 #  seq_data:
