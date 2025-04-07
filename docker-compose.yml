@@ -30,11 +30,10 @@ services:
       - monitoring
     volumes:
       - db-data:/itu-minitwit/minitwit.Api/data
-      - logs:/itu-minitwit/minitwit.Api/logs
     depends_on:
       - grafana
       - prometheus
-      - seq
+#      - seq
       
   prometheus:
     restart: on-failure:5
@@ -58,22 +57,21 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
 
-  seq:
-    image: datalust/seq:latest
-    container_name: seq
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - 5341:5341
-      - 8081:80
-    networks:
-      - monitoring
-    volumes:
-      - seq_data:/data
+#  seq:
+#    image: datalust/seq:latest
+#    container_name: seq
+#    environment:
+#      - ACCEPT_EULA=Y
+#    ports:
+#      - 5341:5341
+#      - 8081:80
+#    networks:
+#      - monitoring
+#    volumes:
+#      - seq_data:/data
 
 volumes:
   db-data:
-  logs:
   prometheus-data:
   grafana-data:
-  seq_data:
+#  seq_data:
