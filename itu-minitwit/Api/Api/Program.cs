@@ -57,8 +57,8 @@ builder.Services.AddDbContext<MinitwitDbContext>(options =>
     options.UseSqlite(connection));
 
 // Configure logging
-builder.Host.UseSerilog((context, loggerConfig) =>
-    loggerConfig.ReadFrom.Configuration(context.Configuration));
+// builder.Host.UseSerilog((context, loggerConfig) =>
+//     loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 
@@ -77,7 +77,7 @@ using (var scope = app.Services.CreateScope())
         context.SaveChanges();
     }
 }
-app.UseSerilogRequestLogging();
+// app.UseSerilogRequestLogging();
 
 app.MapPrometheusScrapingEndpoint();
 
