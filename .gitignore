@@ -20,6 +20,15 @@ minitwit.db
 # Logs
 logs/
 
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+*.tfplan
+.terraform.lock.hcl
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
