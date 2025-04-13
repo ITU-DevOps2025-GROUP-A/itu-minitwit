@@ -1,40 +1,40 @@
 ﻿networks:
-  monitoring:
-    driver: bridge
-    
+  shared_network:
+    external: true
+
 services:
   minitwtitweb:
     restart: on-failure:5
     build:
-      context: .
+      context: ../
       dockerfile: Dockerfile-minitwit
     image: jacquespuvis/minitwitimage
     container_name: minitwitweb
     ports:
       - '80:8080'
     networks:
-      - monitoring
+      - shared_network
     depends_on:
       - minitwitapi
 
   minitwitapi:
     restart: on-failure:5
     build:
-      context: .
+      context: ../
       dockerfile: Dockerfile-Api
     image: jacquespuvis/minitwitapi
     container_name: minitwitapi
     ports:
       - '5000:5000'
     networks:
-      - monitoring
+      - shared_network
     volumes:
       - db-data:/itu-minitwit/minitwit.Api/data
-      - logs:/itu-minitwit/minitwit.Api/logs
     depends_on:
       - grafana
       - prometheus
-      
+#      - seq
+
   prometheus:
     restart: on-failure:5
     image: prom/prometheus
@@ -42,23 +42,36 @@ services:
     ports:
       - '9090:9090'
     networks:
-      - monitoring
+      - shared_network
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
-      
+
   grafana:
     restart: on-failure:5
     image: 'grafana/grafana:10.2.4'
     ports:
       - '3000:3000'
     networks:
-      - monitoring
+      - shared_network
     volumes:
       - grafana-data:/var/lib/grafana
-      
+
+#  seq:
+#    image: datalust/seq:latest
+#    container_name: seq
+#    environment:
+#      - ACCEPT_EULA=Y
+#    ports:
+#      - 5341:5341
+#      - 8081:80
+#    networks:
+#      - monitoring
+#    volumes:
+#      - seq_data:/data
+
 volumes:
   db-data:
-  logs:
   prometheus-data:
   grafana-data:
+#  seq_data:
