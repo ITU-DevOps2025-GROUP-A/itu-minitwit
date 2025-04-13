@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           source: 'remote_files/'
-          target: '/minitwit/remote_files/'
+          target: '/minitwit/'
           overwrite: true
 
       - name: Deploy Application via SSH
@@ -38,5 +38,5 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /minitwit/remote_files
+            cd /minitwit
             ./deploy.sh
