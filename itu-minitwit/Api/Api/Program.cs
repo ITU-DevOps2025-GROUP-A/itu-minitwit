@@ -31,7 +31,7 @@ builder.Services.AddOpenTelemetry().WithMetrics(metrics =>
         .AddAspNetCoreInstrumentation() // Enables HTTP metrics
         .AddHttpClientInstrumentation() // Enables outgoing request metrics
         .AddMeter(
-            "Microsoft.AspNetCore.Hosting", 
+            "Microsoft.AspNetCore.Hosting",
             "Microsoft.AspNetCore.Server.Kestrel",
             MetricsConfig.ServiceName
         )
@@ -52,11 +52,14 @@ builder.Services.AddScoped<IFollowService, FollowService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 
-var connectionStringLocal = builder.Configuration.GetConnectionString("DefaultConnection");
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Testing")
+{
+    var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+                           ?? throw new ArgumentException("Cant find connection string");
 
-builder.Services.AddDbContext<MinitwitDbContext>(options =>
-    options.UseNpgsql(connectionStringLocal));
-
+    builder.Services.AddDbContext<MinitwitDbContext>(options =>
+        options.UseNpgsql(connectionString));
+}
 
 // Configure logging
 // builder.Host.UseSerilog((context, loggerConfig) =>

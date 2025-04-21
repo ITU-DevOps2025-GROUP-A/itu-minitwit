@@ -18,6 +18,8 @@ services:
       - minitwitapi
 
   minitwitapi:
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
     restart: on-failure:5
     build:
       context: ../
