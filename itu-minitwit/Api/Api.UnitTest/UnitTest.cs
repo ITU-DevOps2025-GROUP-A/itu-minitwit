@@ -11,9 +11,9 @@ using Newtonsoft.Json;
 
 namespace Api.UnitTest;
 
-public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InMemoryWebApplicationFactory>
+public class UnitTest(CustomWebApplicationFactory fixture) : IClassFixture<CustomWebApplicationFactory>
 {
-    private readonly InMemoryWebApplicationFactory fixture = fixture;
+    private readonly CustomWebApplicationFactory fixture = fixture;
 
     private readonly HttpClient client = fixture.CreateClient(new WebApplicationFactoryClientOptions
         { AllowAutoRedirect = true, HandleCookies = true });
@@ -21,7 +21,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task GetLatest_FileIsEmpty_Minius1()
     {
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var response = await client.GetAsync("api/Latest");
         var json = await response.Content.ReadAsStringAsync();
         using var doc = JsonDocument.Parse(json);
@@ -34,7 +34,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task GetLatest_ThereIsAValue_TheValue()
     {
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var dbContext = fixture.GetDbContext();
         var lastAction = new LatestProcessedSimAction { Latest = 230 };
         await dbContext.AddAsync(lastAction);
@@ -52,7 +52,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task GetMessages_Returns_Messages()
     {
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var context = fixture.GetDbContext();
         var user = new User { Username = "test2", Email = "test@test.com", PwHash = "23456" };
         var msg = new Message
@@ -74,6 +74,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task GetFilteredMessages_returnsFilteredMessages()
     {
+        await fixture.ResetDatabaseAsync();
         var context = fixture.GetDbContext();
         var user = new User { Username = "Man", Email = "Man@Man.com", PwHash = "23456" };
     
@@ -81,6 +82,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
         var msg2 = new Message { AuthorId = 1, Text = "Hello again from Man", PubDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds() };
 
         await context.Users.AddAsync(user);
+        
         await context.SaveChangesAsync();
         
         await context.Messages.AddAsync(msg);
@@ -107,6 +109,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task GetEmptyFilteredMessages_returnsErrorResponse()
     {
+        await fixture.ResetDatabaseAsync();
         var context = fixture.GetDbContext();
         var user = new User { Username = "Man", Email = "Man@Man.com", PwHash = "23456" };
 
@@ -122,6 +125,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     public async Task PostMessage_CreatesMessageSuccessfully()
     {
         // Arrange
+        await fixture.ResetDatabaseAsync();
         var context = fixture.GetDbContext(); // This should return a properly set up in-memory context
 
         var user = new User { Username = "Man", Email = "Man@test.com", PwHash = "hashedpassword" };
@@ -177,7 +181,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     public async Task FollowUser_FollowsItself_BadRequest()
     {
         // Arrange
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var dbContext = fixture.GetDbContext();
 
         // Prepare the DTO with the follow action
@@ -208,7 +212,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     public async Task FollowUser_FollowsUser_NoContent()
     {
         // Arrange
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
     
         var dbContext = fixture.GetDbContext();
     
@@ -250,7 +254,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     public async Task UnfollowUser_UnfollowsItself_BadRequest()
     {
         // Arrange
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var dbContext = fixture.GetDbContext();
 
         // Create user "test"
@@ -293,7 +297,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     public async Task UnfollowUser_UnfollowsUser_NoContent()
     {
         // Arrange
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         
         var dbContext = fixture.GetDbContext();
         var user1 = new User { UserId = 1, Username = "test", Email = "", PwHash = "" };
@@ -336,7 +340,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     public async Task Getfollows_ReturnsFollows()
     {
         // Arrange
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         
         var dbContext = fixture.GetDbContext();
         var user1 = new User { UserId = 1, Username = "test", Email = "", PwHash = "" };
@@ -370,6 +374,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task Register_UsernameValidation_StatusCode400()
     {
+        await fixture.ResetDatabaseAsync();
         var jsonPayload = System.Text.Json.JsonSerializer.Serialize(new
         {
             username = "",
@@ -392,6 +397,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task Register_EmailValidation_StatusCode400()
     {
+        await fixture.ResetDatabaseAsync();
         var jsonPayload = System.Text.Json.JsonSerializer.Serialize(new
         {
             username = "test",
@@ -414,6 +420,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task Register_PasswordValidation_StatusCode400()
     {
+        await fixture.ResetDatabaseAsync();
         var jsonPayload = System.Text.Json.JsonSerializer.Serialize(new
         {
             username = "test",
@@ -436,7 +443,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task Register_UsernameTaken_StatusCode400()
     {
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var dbContext = fixture.GetDbContext();
         User user = new User
         {
@@ -469,6 +476,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task Register_RegistersUser_StatusCode200()
     {
+        await fixture.ResetDatabaseAsync();
         var dbContext = fixture.GetDbContext();
         var jsonPayload = System.Text.Json.JsonSerializer.Serialize(new
         {
@@ -493,7 +501,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     [Fact]
     public async Task SendingMessageCreatesUser()
     {
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var dbContext = fixture.GetDbContext();
         var messageDto = new CreateMessageDTO
         {
@@ -519,7 +527,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     public async Task FollowingCreatesUsers()
     {
         // Arrange
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var dbContext = fixture.GetDbContext();
 
         // Prepare the DTO with the follow action
@@ -549,7 +557,7 @@ public class UnitTest(InMemoryWebApplicationFactory fixture) : IClassFixture<InM
     public async Task UnFollowingCreatesUsers()
     {
         // Arrange
-        fixture.ResetDB();
+        await fixture.ResetDatabaseAsync();
         var dbContext = fixture.GetDbContext();
 
         // Prepare the DTO with the follow action
