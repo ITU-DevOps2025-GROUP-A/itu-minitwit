@@ -33,10 +33,13 @@ jobs:
 
       - name: Deploy Application via SSH
         uses: appleboy/ssh-action@v1.2.0
+        env:
+            DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          envs: DB_CONNECTION_STRING
           script: |
             cd /minitwit
             ./deploy.sh
