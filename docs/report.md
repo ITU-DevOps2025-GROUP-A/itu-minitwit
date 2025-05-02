@@ -31,4 +31,16 @@ header-includes:
 
 # Reflections
 
-I have indeed reflected upon the the important aspects of this course. Trust me 
+## Evolution
+
+## Refactoring
+
+* Refactoring from Python to C# and incorporating Helge's API specifications. Specifically 'minitwit_sim_api.py'
+
+## Operation
+
+* Logging hell. Logging so much that our VM crashed.
+
+* CPU overload on our droplet (VM) on Digital Ocean
+
+## Maintenance
