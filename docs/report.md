@@ -23,15 +23,19 @@ header-includes:
 \pagebreak
 
 # System
-
+* programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
+* Containerised with docker.
 \pagebreak
 # Process
-
 \pagebreak
 
 # Reflections
 
 ## Evolution
+Throughout the project there has been a division in the group between developing the new implementations to the web app
+and operating these feature with CI/CD pipelines. 
+* Split between 'Dev' and 'Ops'.
+* Technical dept
 
 ## Refactoring
 
