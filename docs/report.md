@@ -43,7 +43,11 @@ Lesson: Do it right the first time.
 
 ## Operation
 
-* Logging hell. Logging so much that our VM crashed.
+Our VM crashed due to extensive (and redundant) logging. We logged to console, to docker logs and to files. This resulted in the logs using all the storage in the VM
+What could be done, is to make sure only to log once and automatically delete old logs which are not needed anymore
+
+
+
 
 * CPU overload on our droplet (VM) on Digital Ocean
 
