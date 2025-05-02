@@ -35,6 +35,11 @@ header-includes:
 
 ## Refactoring
 
+When rewriting the code to C# and adhering to the 'minitwit_sim_api.py' from session3, we weren't thorough enough when analyzing the specs.
+This resulted in us pushing code to production, which 'seemingly' followed specs from the latter mentioned file.
+After long contemplation on why it didn't work, we took a step back and properly analyzed the api specs.
+Lesson: Do it right the first time.
+
 * Refactoring from Python to C# and incorporating Helge's API specifications. Specifically 'minitwit_sim_api.py'
 
 ## Operation
