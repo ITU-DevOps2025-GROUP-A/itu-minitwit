@@ -30,3 +30,5 @@ header-includes:
 \pagebreak
 
 # Reflections
+
+I have indeed reflected upon the the important aspects of this course. Trust me 
