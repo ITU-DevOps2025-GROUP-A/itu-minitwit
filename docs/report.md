@@ -51,8 +51,8 @@ Our VM crashed due to extensive (and redundant) logging. We logged to console, t
 What could be done, is to make sure only to log once and automatically delete old logs which are not needed anymore
 
 
-
-
 * CPU overload on our droplet (VM) on Digital Ocean
 
+We experienced CPU overload on our droplet (VM) on Digital ocean. This resulted in the droplet crashing.
+Unfortunately, we have no idea why this is happening, even after extensive diagnosis
 ## Maintenance
