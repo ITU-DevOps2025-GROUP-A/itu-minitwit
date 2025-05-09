@@ -25,10 +25,14 @@ header-includes:
 # System
 * programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
-\pagebreak
 # Process
-\pagebreak
+For our entire developing process we've used trunk-based development 
+* trunk-based development with feature branches
+* GitHub actions for CI/CD
 
+## Workflow
+
+\pagebreak
 # Reflections
 
 ## Evolution
@@ -40,7 +44,7 @@ and operating these feature with CI/CD pipelines.
 ## Refactoring
 
 When rewriting the code to C# and adhering to the 'minitwit_sim_api.py' from session3, we weren't thorough enough when analyzing the specs.
-This resulted in us pushing code to production, which 'seemingly' followed specs from the latter mentioned file.
+This resulted in us pushing code to production, which 'seemingly' followed specs from the aforementioned file.
 After long contemplation on why it didn't work, we took a step back and properly analyzed the api specs.
 Lesson: Do it right the first time.
 
