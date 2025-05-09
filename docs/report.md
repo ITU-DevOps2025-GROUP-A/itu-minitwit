@@ -25,6 +25,13 @@ header-includes:
 # System
 * programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
+* Onion architecture for code structure
+* dependencies:
+  * API
+  * PostgreSQL
+  * Digital Ocean
+  * Prometheus
+  * Grafana
 # Process
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
 We use GitHub actions for CI/CD and GitHub issues for task management. So you have your standard workflows for building, testing and deploying the code.
