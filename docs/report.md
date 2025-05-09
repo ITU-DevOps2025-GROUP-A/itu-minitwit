@@ -33,6 +33,8 @@ header-includes:
   * Prometheus
   * Grafana
 # Process
+
+## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
 We use GitHub actions for CI/CD and GitHub issues for task management. So you have your standard workflows for building, testing and deploying the code.
 On each pull request to the main branch, we run first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
@@ -54,14 +56,12 @@ that if we had 10's or 100's of timeouts, we could be sure that the codebase was
 
 '***add section about our security assessment results here'
 
+## Scaling
 Regarding the scaling of our application, we are in the transition of moving from docker compose to docker swarm. However, we are using docker compose that composes
-a api and minitwit dockerfile. Our intentions are to set up a declarative IaC using Terraform and with that set up a docker swarm cluster that can handle the scaling of our application.
+an API and MiniTwit dockerfile. Our intentions are to set up a declarative IaC using Terraform and with that set up a docker swarm cluster that can handle the scaling of our application.
 Unfortunately as of now, we haven't fully integrated this structure because of some complications with the implementation.
 
 sticky-notes:
-* trunk-based development with feature branches
-* GitHub actions for CI/CD
-* GitHub issues for task management
 
 
 # Reflections
