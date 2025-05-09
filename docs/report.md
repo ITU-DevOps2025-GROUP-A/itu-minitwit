@@ -63,15 +63,25 @@ sticky-notes:
 * GitHub actions for CI/CD
 * GitHub issues for task management
 
-# Reflections
 
+# Reflections
+The difficulties of the project were primarily to translate the simulation_api from python to C#, but also in implementing
+new features as well as learning new and unfamiliar technologies that should be integrated with the project.  
 ## Evolution
+
 Throughout the project there has been a division in the group between developing the new implementations to the web app
-and operating these feature with CI/CD pipelines. 
-* Split between 'Dev' and 'Ops'.
+and operating these feature with CI/CD pipelines.
 * Technical dept
 
-## Refactoring
+### 'Dev' and 'Ops'
+In the beginning of the project we had a lot of work that needed to be done. This was for instance translating the simulation whilst
+also setting up the CI/CD pipelines. We also had to start using containerisation with docker and vagrant. This led to a split in the group
+between the developers, who started translating the simulation to C#, and the operators, who started setting up the CI/CD and containerisation.
+The difficulties lied in the communication between these two groups and how both parties could get up to speed with their respective work they've made.
+A logbook was created to keep track of any work that has been done, but was unfortunately disregarded by other tasks and hasn't been updated since 07/02/25 (according to the log.md file).
+
+
+### Refactoring
 
 When rewriting the code to C# and adhering to the 'minitwit_sim_api.py' from session3, we weren't thorough enough when analyzing the specs.
 This resulted in us pushing code to production, which 'seemingly' followed specs from the aforementioned file.
@@ -81,12 +91,16 @@ Lesson: Do it right the first time.
 
 ## Operation
 
-Our VM crashed due to extensive (and redundant) logging. We logged to console, to docker logs and to files. This resulted in the logs using all the storage in the VM
-What could be done, is to make sure only to log once and automatically delete old logs which are not needed anymore
+### Logging
+We had an experience where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
+This resulted in the bloating our Digital Ocean droplet with sizeable logs. What could be done differently, was to make to only log
+once and automatically delete old ones which weren't needed anymore.
 
+### CPU overload
+We experienced a CPU overload in our droplet. The CPU would spike to 100% and sometimes exceeding that (due to Digital Ocean limiting the CPU size of the droplet).
+This resulted in a crash of the droplet. Unfortunately, as of now (9/5/2025) we haven't found the reason for why this is happening.
+For future reference we should have a more thorough testing suite.
 
-* CPU overload on our droplet (VM) on Digital Ocean
-
-We experienced CPU overload on our droplet (VM) on Digital ocean. This resulted in the droplet crashing.
-Unfortunately, we have no idea why this is happening, even after extensive diagnosis
 ## Maintenance
+* docker compose up --build
+* grafana and prometheus
