@@ -26,13 +26,36 @@ header-includes:
 * programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
 # Process
-For our entire developing process we've used trunk-based development 
+For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
+We use GitHub actions for CI/CD and GitHub issues for task management. So you have your standard workflows for building, testing and deploying the code.
+On each pull request to the main branch, we run first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
+which runs a handful of jobs:
+* check-for-warnings
+* build
+* test
+* run-simulation
+* sonarqube-analysis
+
+These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
+The important note is that the run-simulation could have http requests that could time out, however, we ensured that if
+there was only a couple of timouts we could deduce that the codebase still worked as intended. This was primarily to confirm
+that if we had 10's or 100's of timeouts, we could be sure that the codebase was broken.
+
+'***add section about what and how we monitor here'
+
+'***add section about what and how we log here'
+
+'***add section about our security assessment results here'
+
+Regarding the scaling of our application, we are in the transition of moving from docker compose to docker swarm. However, we are using docker compose that composes
+a api and minitwit dockerfile. Our intentions are to set up a declarative IaC using Terraform and with that set up a docker swarm cluster that can handle the scaling of our application.
+Unfortunately as of now, we haven't fully integrated this structure because of some complications with the implementation.
+
+sticky-notes:
 * trunk-based development with feature branches
 * GitHub actions for CI/CD
+* GitHub issues for task management
 
-## Workflow
-
-\pagebreak
 # Reflections
 
 ## Evolution
