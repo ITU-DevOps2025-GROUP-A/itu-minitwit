@@ -32,6 +32,10 @@ header-includes:
   * Digital Ocean
   * Prometheus
   * Grafana
+  * Serilog
+    * A powerfull and widley used logging framework for .Net applications
+  * Seq
+    * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 # Process
 
 ## Workflow
@@ -53,6 +57,12 @@ that if we had 10's or 100's of timeouts, we could be sure that the codebase was
 '***add section about what and how we monitor here'
 
 '***add section about what and how we log here'
+We rely on serilog for generating and sending logs to our log vizualiser Seq. 
+Over logging strategy is quite exstencive, since we have had a lot of troubles with our application, we thought it was better to have more and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
+We log when we raise exceptions and when exceptions are caught, this to help us see how erros where propecated through the system.
+We log execution time of methods called, this was done as to help us see if there wehere methods bottle necking us.
+We log the input and output of methods called, this way we can observe if they behave like we expect them too.
+
 
 '***add section about our security assessment results here'
 
