@@ -92,7 +92,7 @@ Lesson: Do it right the first time.
 ## Operation
 
 ### Logging
-We had an experience where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
+We had an experience, before we where introduced to logging in class, where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
 This resulted in the bloating our Digital Ocean droplet with sizeable logs. What could be done differently, was to make to only log
 once and automatically delete old ones which weren't needed anymore.
 
