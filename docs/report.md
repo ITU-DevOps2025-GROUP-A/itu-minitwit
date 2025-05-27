@@ -60,7 +60,7 @@ Our application expose an endpoint using the OpenTelemetry nuget package for exp
 Prometheus then scrapes the endpoint with an interval of 5 seconds, configured in the Prometheus.yaml file.
 Prometheus saves the data in a times series database. This database is queried by Grafana which visualises the data in a custom dashboard.
 Our custom dashboard has been built on top of the "ASP.NET Core" dashboard published by the .Net Team (https://grafana.com/grafana/dashboards/19924-asp-net-core/).
-We have added a few custom panels. The most interesting being one a table that shows total amount of request per status code for each endpoint. 
+We have added a few custom panels. The most interesting being a table that shows total amount of request per status code for each endpoint. 
 Another useful panel we made plots the request duration of different endpoints.
 
 Status code panel
