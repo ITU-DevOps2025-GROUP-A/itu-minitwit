@@ -31,15 +31,15 @@ header-includes:
 ![Docker swarm deployment of _itu_minitwit_ ](images/DockerDeployment.png)
 
 The system is in the process of being converted to use Docker Swarm instead of a docker network. 
-This was to increase the crash resilience, by replicating the services, so if one where to crash the application would still function. Currently the Swarm can be setup using a terraform file, but it only deploys an empty Swarm. The step to populate the Swarm would happen as a step in the deployment chain, where we would ssh into the manager node and then deployed there. 
+This was to increase the crash resilience, by replicating the services, so if one were to crash the application would still function. Currently, the Swarm can be setup using terraform, but it only deploys an empty Swarm. The step to populate the Swarm would happen as a step in the deployment chain, where we would ssh into the manager node and then deployed there. 
 There were complications configuring the Prometheus client's configuration file, since the way the file is mounted to the service is different in docker Swarm as to the standard deployment. 
 
-One thing that is missing in the terraform file is correctly configuring the firewalls so that the internal DNS network can correctly route between the services. 
+One thing that is missing in our terraform configuration is correctly opening for the firewalls so that the internal DNS network can correctly route between the services. 
 
-* programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
+* Programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
 * Onion architecture for code structure
-* dependencies:
+* Dependencies:
   * API
   * PostgreSQL
   * Digital Ocean
@@ -59,19 +59,23 @@ One thing that is missing in the terraform file is correctly configuring the fir
 ## Provisioning
 Vagrant was used to provision virtual machines, specified with a Vagrantfile. In the Vagrantfile, you're able to provision several virtual machines 
 at the same time (fx the web app and the database), define and install their dependencies. This allows for an easy, streamlined way to always provision
-VM's without having to rely on a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
+VM's without having to rely on configuration a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
 only having to change the vm.provider.
+
+We are changing from Vagrant to Terraform. Terraform is infrastructure as code. 
+This allows us to define how we want our infrastructure to look, 
+and let terraform figure out how to get there.
 
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
 We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
 On each pull request to the main branch, we first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
 which runs a handful of jobs:
-* check-for-warnings
-* build
-* test
-* run-simulation
-* sonarqube-analysis
+* Check-for-warnings
+* Build
+* Test
+* Run-simulation
+* Sonarqube-analysis
 
 These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
 The important note is that the run-simulation could have http requests that could time out, however, we ensured that if
@@ -125,7 +129,6 @@ We log when we raise exceptions and when exceptions are caught, this to help us 
 We log execution time of methods called, this was done as to help us see if there wehere methods bottle necking us.
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
 
-
 ## Security
 We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
 A segment of this quality gate, was to ensure that there were no security hotspots. Not only did SonarQube show where the hotspots were,
@@ -142,7 +145,6 @@ sticky-notes:
 
 
 ## AI-assistant
-
 The use of Chat-GPT has been used to some extent. Fx to more easily understand (at the time) complex notions in the topic of operations.
 Various Dockerfiles were created with the assistance of AI, in order to more effectively "learn-by-doing". 
 Furthermore, the assistance of AI proved efficient when having to translate the python api into C#. Problems did arise from this, though.
@@ -153,11 +155,15 @@ heel, since we spent a lot of time trying to diagnose the problem with the simul
 # Reflections
 The difficulties of the project were primarily to translate the simulation_api from python to C#, but also in implementing
 new features as well as learning new and unfamiliar technologies that should be integrated with the project.  
+
 ## Evolution
 
-Throughout the project there has been a division in the group between developing the new implementations to the web app
-and operating these feature with CI/CD pipelines.
-* Technical dept
+### Technical Debt 
+The group experienced first hand was how much technical debt could slowdown the development process. 
+When we first shipped our code, we had not made sure that all the simulator tests passed. Because of this 
+our database where missing all of the initial users, which gave us simulator errors. Because of these errors, fixes 
+where later attempted to insert the users into the database, but this created a new error, where our VM would 
+crash, which never got fixed.
 
 ### 'Dev' and 'Ops'
 In the beginning of the project we had a lot of work that needed to be done. This was for instance translating the simulation whilst
@@ -168,7 +174,6 @@ A logbook was created to keep track of any work that has been done, but was unfo
 
 
 ### Refactoring
-
 When rewriting the code to C# and adhering to the 'minitwit_sim_api.py' from session3, we weren't thorough enough when analyzing the specs.
 This resulted in us pushing code to production, which 'seemingly' followed specs from the aforementioned file.
 After long contemplation on why it didn't work, we took a step back and properly analyzed the api specs.
@@ -190,7 +195,6 @@ For future reference, we should have a more thorough testing suite.
 ![Spikes on Grafana](images/Grafana_Issues%202025-04-04.png)
 
 ## Maintenance
-
 
 running docker compose up --build when merging with main. 
 using grafana and prometheus to monitor application activity. 

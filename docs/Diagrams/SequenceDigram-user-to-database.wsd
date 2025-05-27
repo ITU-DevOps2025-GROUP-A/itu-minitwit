@@ -1,0 +1,90 @@
+@startuml
+actor user
+participant web
+participant api.controller
+participant api.service
+participant api.repository
+database database
+
+user -> web : send messsage "Hello"
+activate web
+
+web -> api.controller : <<send message>>(username, "Hello")
+activate api.controller
+
+api.controller -> api.service : <<add message>>(username, "Hello")
+activate api.service
+
+api.service -> api.repository : <<add message>>(username, "Hello")
+activate api.repository
+
+api.repository -> database : <<get user>>(username)
+    alt user exists
+        activate api.repository
+        activate database
+        api.repository <-- database : user
+        deactivate api.repository
+        deactivate database
+        api.repository -> database : <<add messages> "Hello"
+        activate api.repository
+        activate database
+        api.repository <-- database : messages created
+        deactivate database
+        deactivate api.repository
+        api.service <-- api.repository : messages created
+    else 
+        activate database
+        api.repository <-- database : null
+        destroy database
+        activate api.repository
+        
+        api.service <-- api.repository : <<exception>> UserDosentExsits
+        deactivate api.repository
+
+        break user dosent exists
+            api.service -> api.service : <<create user>>(username)
+            activate api.service
+
+            api.service -> api.repository : <<create user>>(username)
+            activate api.repository
+            
+            api.repository -> database : <<create user>>(username)
+            activate database
+            
+            api.repository <-- database : user created
+            deactivate database
+
+            api.service <-- api.repository : <<user created>>(user)
+            deactivate api.service
+            deactivate api.repository
+
+            api.service -> api.repository : <<add message>>(username, "Hello")
+            activate api.service
+            activate api.repository
+
+            api.repository -> database : <<add message> "Hello"
+            activate database
+
+            api.repository <-- database : message created
+            deactivate database
+            
+            api.service <-- api.repository : message created
+            deactivate api.service
+            deactivate api.repository
+        end
+    end
+deactivate api.repository
+
+api.controller <-- api.service : message created
+deactivate api.service
+
+web <-- api.controller : <<Http no content>> 204
+deactivate api.controller
+
+activate web
+web -> web : add new message to feed
+web -> web : noify ui of changes 
+deactivate web
+
+user <-- web : updated message feed
+@enduml
