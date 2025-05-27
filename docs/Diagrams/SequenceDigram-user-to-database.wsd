@@ -7,7 +7,6 @@ participant api.repository
 database database
 
 user -> web : send messsage "Hello"
-activate user
 activate web
 
 web -> api.controller : <<send message>>(username, "Hello")
@@ -87,5 +86,4 @@ web -> web : noify ui of changes
 deactivate web
 
 user <-- web : updated message feed
-deactivate user
 @enduml
