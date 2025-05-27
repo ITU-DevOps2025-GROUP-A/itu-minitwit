@@ -52,6 +52,8 @@ One thing that is missing in our terraform configuration is correctly opening fo
 
 
 ## Current state of System
+As seen on the image below, the reliability and maintainability score is as high as can be. The same goes for code-duplication
+For explanation of security, see the security section in the process overview.
 ![Static analysis on SonarQube](images/sonarqube.png)
 
 # Process
