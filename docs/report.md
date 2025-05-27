@@ -169,6 +169,10 @@ We experienced a CPU overload in our droplet. The CPU would spike to 100% and so
 This resulted in a crash of the droplet. Unfortunately, as of now (9/5/2025) we haven't found the reason for why this is happening.
 For future reference we should have a more thorough testing suite.
 
+![CPU Spike on Digital Ocean](images/Digital_Ocean_2025-04-05.png)
+![Spikes on Grafana](images/Grafana_Issues%202025-04-04.png)
+
+
 ## Maintenance
 * docker compose up --build
 * grafana and prometheus
