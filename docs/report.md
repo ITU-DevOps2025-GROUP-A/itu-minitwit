@@ -173,7 +173,7 @@ After long contemplation on why it didn't work, we took a step back and properly
 Lesson: Do it right the first time.
 
 
-## Operation
+## Operation and Maintenance
 
 ### Logging
 We had an experience, before we were introduced to logging in class, where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
@@ -188,14 +188,13 @@ For future reference, we should have a more thorough testing suite.
 ![CPU Spike on Digital Ocean](images/Digital_Ocean_2025-04-05.png)
 ![Spikes on Grafana](images/Grafana_Issues%202025-04-04.png)
 
-## Maintenance
-
-running docker compose up --build when merging with main. 
-using grafana and prometheus to monitor application activity. 
-
-grafana is a visualisation of structured data. 
-* docker compose up --build
-* grafana and prometheus
+## Grafana
+During session6 we were tasked to add monitoring to our application through
+prometheus using grafana for visualization. 
+This included monitoring over the requests for different endpoints in the application.
+While we did add monitoring to the application, we didn't use this as much due to other tasks being prioritized.
+This is also important to note that while maintenance is important, it can have a meaningless effect on the application without proper inspection.
+For the future, it could be nice to have an alert for any downtime on the application. That way we could have better handling over any server issues or errors that occurred in our application.
 
 # TO-DO
 # Technical Debt
