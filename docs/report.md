@@ -23,6 +23,19 @@ header-includes:
 \pagebreak
 
 # System
+## Current Deployment
+![Current deployment of _itu_minitwit_ ](images/CurrentDeployment.png)
+
+
+## Swarm Deployment
+![Docker swarm deployment of _itu_minitwit_ ](images/DockerDeployment.png)
+
+The system is in the process of being converted to use Docker Swarm instead of a docker network. 
+This was to increase the crash resilience, by replicating the services, so if one where to crash the application would still function. Currently the Swarm can be setup using a terraform file, but it only deploys an empty Swarm. The step to populate the Swarm would happen as a step in the deployment chain, where we would ssh into the manager node and then deployed there. 
+There were complications configuring the Prometheus client's configuration file, since the way the file is mounted to the service is different in docker Swarm as to the standard deployment. 
+
+One thing that is missing in the terraform file is correctly configuring the firewalls so that the internal DNS network can correctly route between the services. 
+
 * programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
 * Onion architecture for code structure
@@ -37,6 +50,12 @@ header-includes:
   * Seq
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 # Process
+
+## Provisioning
+Vagrant was used to provision virtual machines, specified with a Vagrantfile. In the Vagrantfile, you're able to provision several virtual machines 
+at the same time (fx the web app and the database), define and install their dependencies. This allows for an easy, streamlined way to always provision
+VM's without having to rely on a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
+only having to change the vm.provider.
 
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
@@ -60,7 +79,7 @@ Our application expose an endpoint using the OpenTelemetry nuget package for exp
 Prometheus then scrapes the endpoint with an interval of 5 seconds, configured in the Prometheus.yaml file.
 Prometheus saves the data in a times series database. This database is queried by Grafana which visualises the data in a custom dashboard.
 Our custom dashboard has been built on top of the "ASP.NET Core" dashboard published by the .Net Team (https://grafana.com/grafana/dashboards/19924-asp-net-core/).
-We have added a few custom panels. The most interesting being one a table that shows total amount of request per status code for each endpoint.
+We have added a few custom panels. The most interesting being a table that shows total amount of request per status code for each endpoint. 
 Another useful panel we made plots the request duration of different endpoints.
 
 Status code panel
@@ -106,7 +125,8 @@ We log the input and output of methods called, this way we can observe if they b
 We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
 A segment of this quality gate, was to ensure that there were no security hotspots. Not only did SonarQube show where the hotspots were,
 but it also explained why this is a hotspot, and how to fix it. In our last release, we still had security hotspot, more specifically an
-"Open Redirect Vulnerability". This vulnerability results in an "E-score", but the rest is rate B or above. This could have been fixed, by creating a "allow-list" of safe relative paths to redirect to.
+"Open Redirect Vulnerability". This vulnerability results in an "E-score", but the rest is rate B or above. 
+This could have been fixed, by creating a "allow-list" of safe relative paths to redirect to.
 
 ## Scaling
 Regarding the scaling of our application, we are in the transition of moving from docker compose to docker swarm. However, we are using docker compose that composes
@@ -114,6 +134,15 @@ an API and MiniTwit dockerfile. Our intentions are to set up a declarative IaC u
 Unfortunately as of now, we haven't fully integrated this structure because of some complications with the implementation.
 
 sticky-notes:
+
+
+## AI-assistant
+
+The use of Chat-GPT has been used to some extent. Fx to more easily understand (at the time) complex notions in the topic of operations.
+Various Dockerfiles were created with the assistance of AI, in order to more effectively "learn-by-doing". 
+Furthermore, the assistance of AI proved efficient when having to translate the python api into C#. Problems did arise from this, though.
+As an example, the AI rewrote the returned status codes, which meant that it wasn't compliant with the simulator. This ended up being an achilles
+heel, since we spent a lot of time trying to diagnose the problem with the simulator.
 
 
 # Reflections
