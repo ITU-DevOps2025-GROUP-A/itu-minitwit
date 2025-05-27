@@ -46,14 +46,20 @@ One thing that is missing in the terraform file is correctly configuring the fir
   * Prometheus
   * Grafana
   * Serilog
-    * A powerfull and widley used logging framework for .Net applications
+    * A powerful and widley used logging framework for .Net applications
   * Seq
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 # Process
 
+## Provisioning
+Vagrant was used to provision virtual machines, specified with a Vagrantfile. In the Vagrantfile, you're able to provision several virtual machines 
+at the same time (fx the web app and the database), define and install their dependencies. This allows for an easy, streamlined way to always provision
+VM's without having to rely on a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
+only having to change the vm.provider.
+
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
-We use GitHub actions for CI/CD and GitHub issues for task management. So you have your standard workflows for building, testing and deploying the code.
+We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
 On each pull request to the main branch, we run first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
 which runs a handful of jobs:
 * check-for-warnings
@@ -66,20 +72,63 @@ which runs a handful of jobs:
 
 These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
 The important note is that the run-simulation could have http requests that could time out, however, we ensured that if
-there was only a couple of timouts we could deduce that the codebase still worked as intended. This was primarily to confirm
+there was only a couple of timeouts we could deduce that the codebase still worked as intended. This was primarily to confirm
 that if we had 10's or 100's of timeouts, we could be sure that the codebase was broken.
 
-'***add section about what and how we monitor here'
+'***add section about what and how we monitor here'\
+We monitor through the use of Prometheus and Grafana.
+Our application expose an endpoint using the OpenTelemetry nuget package for exporting telemetry data that Prometheus can understand.
+Prometheus then scrapes the endpoint with an interval of 5 seconds, configured in the Prometheus.yaml file.
+Prometheus saves the data in a times series database. This database is queried by Grafana which visualises the data in a custom dashboard.
+Our custom dashboard has been built on top of the "ASP.NET Core" dashboard published by the .Net Team (https://grafana.com/grafana/dashboards/19924-asp-net-core/).
+We have added a few custom panels. The most interesting being a table that shows total amount of request per status code for each endpoint. 
+Another useful panel we made plots the request duration of different endpoints.
+
+Status code panel
+```
+label_join(
+  http_server_request_duration_seconds_count{
+    job="$job", 
+    instance="$instance", 
+    http_route!=""
+  }, 
+  "method_route", 
+  " ", 
+  "http_request_method", 
+  "http_route"
+)
+```
+
+Status code panel
+```
+rate(
+  http_server_request_duration_seconds_sum{
+    job="$job", 
+    instance="$instance", http_route!=""
+  }[5m]
+) / rate(
+  http_server_request_duration_seconds_count{
+    job="$job", 
+    instance="$instance", 
+    http_route!=""
+    } [5m]
+)
+```
 
 '***add section about what and how we log here'
-We rely on serilog for generating and sending logs to our log vizualiser Seq. 
-Over logging strategy is quite exstencive, since we have had a lot of troubles with our application, we thought it was better to have more and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
+We rely on serilog for generating and sending logs to our log visualiser Seq. 
+Over logging strategy is quite extensive, since we have had a lot of troubles with our application, we thought it was better to have more and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
 We log when we raise exceptions and when exceptions are caught, this to help us see how erros where propecated through the system.
 We log execution time of methods called, this was done as to help us see if there wehere methods bottle necking us.
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
 
 
-'***add section about our security assessment results here'
+## Security
+We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
+A segment of this quality gate, was to ensure that there were no security hotspots. Not only did SonarQube show where the hotspots were,
+but it also explained why this is a hotspot, and how to fix it. In our last release, we still had security hotspot, more specifically an
+"Open Redirect Vulnerability". This vulnerability results in an "E-score", but the rest is rate B or above. 
+This could have been fixed, by creating a "allow-list" of safe relative paths to redirect to.
 
 ## Scaling
 Regarding the scaling of our application, we are in the transition of moving from docker compose to docker swarm. However, we are using docker compose that composes
@@ -87,6 +136,15 @@ an API and MiniTwit dockerfile. Our intentions are to set up a declarative IaC u
 Unfortunately as of now, we haven't fully integrated this structure because of some complications with the implementation.
 
 sticky-notes:
+
+
+## AI-assistant
+
+The use of Chat-GPT has been used to some extent. Fx to more easily understand (at the time) complex notions in the topic of operations.
+Various Dockerfiles were created with the assistance of AI, in order to more effectively "learn-by-doing". 
+Furthermore, the assistance of AI proved efficient when having to translate the python api into C#. Problems did arise from this, though.
+As an example, the AI rewrote the returned status codes, which meant that it wasn't compliant with the simulator. This ended up being an achilles
+heel, since we spent a lot of time trying to diagnose the problem with the simulator.
 
 
 # Reflections
@@ -117,7 +175,7 @@ Lesson: Do it right the first time.
 ## Operation
 
 ### Logging
-We had an experience, before we where introduced to logging in class, where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
+We had an experience, before we were introduced to logging in class, where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
 This resulted in the bloating our Digital Ocean droplet with sizeable logs. What could be done differently, was to make to only log
 once and automatically delete old ones which weren't needed anymore.
 
