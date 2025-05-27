@@ -26,6 +26,9 @@ header-includes:
 ## Current Deployment
 ![Current deployment of _itu_minitwit_ ](images/CurrentDeployment.png)
 
+## Interactions of subsystems
+![alt text](images/sequence-user.png)
+![alt text](images/sequence-sim.png)
 
 ## Swarm Deployment
 ![Docker swarm deployment of _itu_minitwit_ ](images/DockerDeployment.png)
