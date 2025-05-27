@@ -38,6 +38,12 @@ header-includes:
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 # Process
 
+## Provisioning
+Vagrant was used to provision virtual machines, specified with a Vagrantfile. In the Vagrantfile, you're able to provision several virtual machines 
+at the same time (fx the web app and the database), define and install their dependencies. This allows for an easy, streamlined way to always provision
+VM's without having to rely on a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
+only having to change the vm.provider.
+
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
 We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
