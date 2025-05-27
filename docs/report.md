@@ -33,7 +33,7 @@ header-includes:
   * Prometheus
   * Grafana
   * Serilog
-    * A powerful and widley used logging framework for .Net applications
+    * A powerful and widely used logging framework for .Net applications
   * Seq
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 # Process
@@ -41,7 +41,7 @@ header-includes:
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
 We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
-On each pull request to the main branch, we run first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
+On each pull request to the main branch, we first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
 which runs a handful of jobs:
 * check-for-warnings
 * build
@@ -54,13 +54,13 @@ The important note is that the run-simulation could have http requests that coul
 there was only a couple of timeouts we could deduce that the codebase still worked as intended. This was primarily to confirm
 that if we had 10's or 100's of timeouts, we could be sure that the codebase was broken.
 
-'***add section about what and how we monitor here'\
+## Monitoring
 We monitor through the use of Prometheus and Grafana.
 Our application expose an endpoint using the OpenTelemetry nuget package for exporting telemetry data that Prometheus can understand.
 Prometheus then scrapes the endpoint with an interval of 5 seconds, configured in the Prometheus.yaml file.
 Prometheus saves the data in a times series database. This database is queried by Grafana which visualises the data in a custom dashboard.
 Our custom dashboard has been built on top of the "ASP.NET Core" dashboard published by the .Net Team (https://grafana.com/grafana/dashboards/19924-asp-net-core/).
-We have added a few custom panels. The most interesting being one a table that shows total amount of request per status code for each endpoint. 
+We have added a few custom panels. The most interesting being one a table that shows total amount of request per status code for each endpoint.
 Another useful panel we made plots the request duration of different endpoints.
 
 Status code panel
@@ -94,7 +94,7 @@ rate(
 )
 ```
 
-'***add section about what and how we log here'
+## Logging
 We rely on serilog for generating and sending logs to our log visualiser Seq. 
 Over logging strategy is quite extensive, since we have had a lot of troubles with our application, we thought it was better to have more and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
 We log when we raise exceptions and when exceptions are caught, this to help us see how erros where propecated through the system.
@@ -102,8 +102,7 @@ We log execution time of methods called, this was done as to help us see if ther
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
 
 
-'***add section about our security assessment results here'
-
+## Security
 We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
 A segment of this quality gate, was to ensure that there were no security hotspots. Not only did SonarQube show where the hotspots were,
 but it also explained why this is a hotspot, and how to fix it. In our last release, we still had security hotspot, more specifically an
@@ -152,8 +151,14 @@ once and automatically delete old ones which weren't needed anymore.
 ### CPU overload
 We experienced a CPU overload in our droplet. The CPU would spike to 100% and sometimes exceeding that (due to Digital Ocean limiting the CPU size of the droplet).
 This resulted in a crash of the droplet. Unfortunately, as of now (9/5/2025) we haven't found the reason for why this is happening.
-For future reference we should have a more thorough testing suite.
+For future reference, we should have a more thorough testing suite.
 
 ## Maintenance
+
+
+running docker compose up --build when merging with main. 
+using grafana and prometheus to monitor application activity. 
+
+grafana is a visualisation of structured data. 
 * docker compose up --build
 * grafana and prometheus
