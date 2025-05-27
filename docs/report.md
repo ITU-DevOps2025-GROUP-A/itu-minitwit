@@ -194,3 +194,7 @@ using grafana and prometheus to monitor application activity.
 grafana is a visualisation of structured data. 
 * docker compose up --build
 * grafana and prometheus
+
+# TO-DO
+# Technical Debt
+# Sequence Diagram
