@@ -33,14 +33,14 @@ header-includes:
   * Prometheus
   * Grafana
   * Serilog
-    * A powerfull and widley used logging framework for .Net applications
+    * A powerful and widley used logging framework for .Net applications
   * Seq
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 # Process
 
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
-We use GitHub actions for CI/CD and GitHub issues for task management. So you have your standard workflows for building, testing and deploying the code.
+We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
 On each pull request to the main branch, we run first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
 which runs a handful of jobs:
 * check-for-warnings
@@ -51,14 +51,52 @@ which runs a handful of jobs:
 
 These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
 The important note is that the run-simulation could have http requests that could time out, however, we ensured that if
-there was only a couple of timouts we could deduce that the codebase still worked as intended. This was primarily to confirm
+there was only a couple of timeouts we could deduce that the codebase still worked as intended. This was primarily to confirm
 that if we had 10's or 100's of timeouts, we could be sure that the codebase was broken.
 
-'***add section about what and how we monitor here'
+'***add section about what and how we monitor here'\
+We monitor through the use of Prometheus and Grafana.
+Our application expose an endpoint using the OpenTelemetry nuget package for exporting telemetry data that Prometheus can understand.
+Prometheus then scrapes the endpoint with an interval of 5 seconds, configured in the Prometheus.yaml file.
+Prometheus saves the data in a times series database. This database is queried by Grafana which visualises the data in a custom dashboard.
+Our custom dashboard has been built on top of the "ASP.NET Core" dashboard published by the .Net Team (https://grafana.com/grafana/dashboards/19924-asp-net-core/).
+We have added a few custom panels. The most interesting being one a table that shows total amount of request per status code for each endpoint. 
+Another useful panel we made plots the request duration of different endpoints.
+
+Status code panel
+```
+label_join(
+  http_server_request_duration_seconds_count{
+    job="$job", 
+    instance="$instance", 
+    http_route!=""
+  }, 
+  "method_route", 
+  " ", 
+  "http_request_method", 
+  "http_route"
+)
+```
+
+Status code panel
+```
+rate(
+  http_server_request_duration_seconds_sum{
+    job="$job", 
+    instance="$instance", http_route!=""
+  }[5m]
+) / rate(
+  http_server_request_duration_seconds_count{
+    job="$job", 
+    instance="$instance", 
+    http_route!=""
+    } [5m]
+)
+```
 
 '***add section about what and how we log here'
-We rely on serilog for generating and sending logs to our log vizualiser Seq. 
-Over logging strategy is quite exstencive, since we have had a lot of troubles with our application, we thought it was better to have more and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
+We rely on serilog for generating and sending logs to our log visualiser Seq. 
+Over logging strategy is quite extensive, since we have had a lot of troubles with our application, we thought it was better to have more and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
 We log when we raise exceptions and when exceptions are caught, this to help us see how erros where propecated through the system.
 We log execution time of methods called, this was done as to help us see if there wehere methods bottle necking us.
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
