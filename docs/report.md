@@ -26,6 +26,9 @@ header-includes:
 ## Current Deployment
 ![Current deployment of _itu_minitwit_ ](images/CurrentDeployment.png)
 
+## Interactions of subsystems
+![alt text](images/sequence-user.png)
+![alt text](images/sequence-sim.png)
 
 ## Swarm Deployment
 ![Docker swarm deployment of _itu_minitwit_ ](images/DockerDeployment.png)
@@ -50,24 +53,36 @@ One thing that is missing in our terraform configuration is correctly opening fo
   * Seq
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 
+
+## Current state of System
+As seen on the image below, the reliability and maintainability score is as high as can be. The same goes for code-duplication
+For explanation of security, see the security section in the process overview.
+![Static analysis on SonarQube](images/sonarqube.png)
+
 # Process
 
 ## Provisioning
 Vagrant was used to provision virtual machines, specified with a Vagrantfile. In the Vagrantfile, you're able to provision several virtual machines 
 at the same time (fx the web app and the database), define and install their dependencies. This allows for an easy, streamlined way to always provision
-VM's without having to rely on a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
+VM's without having to rely on configuration a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
 only having to change the vm.provider.
+
+We are changing from Vagrant to Terraform. Terraform is infrastructure as code. 
+This allows us to define how we want our infrastructure to look, 
+and let terraform figure out how to get there.
+Terraform is currently configured to provision DigitalOcean, 
+having 1 manager and 2 workers connected in a Docker swarm.
 
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
 We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
 On each pull request to the main branch, we first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
 which runs a handful of jobs:
-* check-for-warnings
-* build
-* test
-* run-simulation
-* sonarqube-analysis
+* Check-for-warnings
+* Build
+* Test
+* Run-simulation
+* Sonarqube-analysis
 
 These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
 The important note is that the run-simulation could have http requests that could time out, however, we ensured that if
@@ -120,7 +135,6 @@ Over logging strategy is quite extensive, since we have had a lot of troubles wi
 We log when we raise exceptions and when exceptions are caught, this to help us see how erros where propecated through the system.
 We log execution time of methods called, this was done as to help us see if there wehere methods bottle necking us.
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
-
 
 ## Security
 We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
@@ -179,7 +193,6 @@ Lesson: Do it right the first time.
 We had an experience, before we were introduced to logging in class, where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
 This resulted in the bloating our Digital Ocean droplet with sizeable logs. What could be done differently, was to make to only log
 once and automatically delete old ones which weren't needed anymore.
-
 ### CPU overload
 We experienced a CPU overload in our droplet. The CPU would spike to 100% and sometimes exceeding that (due to Digital Ocean limiting the CPU size of the droplet).
 This resulted in a crash of the droplet. Unfortunately, as of now (9/5/2025) we haven't found the reason for why this is happening.
@@ -197,5 +210,4 @@ This is also important to note that while maintenance is important, it can have 
 For the future, it could be nice to have an alert for any downtime on the application. That way we could have better handling over any server issues or errors that occurred in our application.
 
 # TO-DO
-# Technical Debt
 # Sequence Diagram

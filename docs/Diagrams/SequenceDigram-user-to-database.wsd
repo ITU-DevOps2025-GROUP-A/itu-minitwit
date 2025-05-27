@@ -33,46 +33,47 @@ api.repository -> database : <<get user>>(username)
         deactivate api.repository
         api.service <-- api.repository : messages created
     else 
-        activate api.repository
         activate database
         api.repository <-- database : null
-        destroy api.repository
-        deactivate database
+        destroy database
+        activate api.repository
+        
         api.service <-- api.repository : <<exception>> UserDosentExsits
+        deactivate api.repository
+
+        break user dosent exists
+            api.service -> api.service : <<create user>>(username)
+            activate api.service
+
+            api.service -> api.repository : <<create user>>(username)
+            activate api.repository
+            
+            api.repository -> database : <<create user>>(username)
+            activate database
+            
+            api.repository <-- database : user created
+            deactivate database
+
+            api.service <-- api.repository : <<user created>>(user)
+            deactivate api.service
+            deactivate api.repository
+
+            api.service -> api.repository : <<add message>>(username, "Hello")
+            activate api.service
+            activate api.repository
+
+            api.repository -> database : <<add message> "Hello"
+            activate database
+
+            api.repository <-- database : message created
+            deactivate database
+            
+            api.service <-- api.repository : message created
+            deactivate api.service
+            deactivate api.repository
+        end
     end
 deactivate api.repository
-
-opt user dosent exists
-    api.service -> api.service : <<create user>>(username)
-    activate api.service
-
-    api.service -> api.repository : <<create user>>(username)
-    activate api.repository
-    
-    api.repository -> database : <<create user>>(username)
-    activate database
-    
-    api.repository <-- database : user created
-    deactivate database
-
-    api.service <-- api.repository : <<user created>>(user)
-    deactivate api.service
-    deactivate api.repository
-
-    api.service -> api.repository : <<add message>>(username, "Hello")
-    activate api.service
-    activate api.repository
-
-    api.repository -> database : <<add message> "Hello"
-    activate database
-
-    api.repository <-- database : message created
-    deactivate database
-    
-    api.service <-- api.repository : message created
-    deactivate api.service
-    deactivate api.repository
-end
 
 api.controller <-- api.service : message created
 deactivate api.service
