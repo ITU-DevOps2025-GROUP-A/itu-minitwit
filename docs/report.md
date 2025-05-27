@@ -66,6 +66,11 @@ We log the input and output of methods called, this way we can observe if they b
 
 '***add section about our security assessment results here'
 
+We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
+A segment of this quality gate, was to ensure that there were no security hotspots. Not only did SonarQube show where the hotspots were,
+but it also explained why this is a hotspot, and how to fix it. In our last release, we still had security hotspot, more specifically an
+"Open Redirect Vulnerability". This could have been fixed, by creating a "allow-list" of safe relative paths to redirect to.
+
 ## Scaling
 Regarding the scaling of our application, we are in the transition of moving from docker compose to docker swarm. However, we are using docker compose that composes
 an API and MiniTwit dockerfile. Our intentions are to set up a declarative IaC using Terraform and with that set up a docker swarm cluster that can handle the scaling of our application.
