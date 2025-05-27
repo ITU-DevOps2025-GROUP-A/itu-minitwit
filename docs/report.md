@@ -55,19 +55,23 @@ One thing that is missing in our terraform configuration is correctly opening fo
 ## Provisioning
 Vagrant was used to provision virtual machines, specified with a Vagrantfile. In the Vagrantfile, you're able to provision several virtual machines 
 at the same time (fx the web app and the database), define and install their dependencies. This allows for an easy, streamlined way to always provision
-VM's without having to rely on a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
+VM's without having to rely on configuration a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
 only having to change the vm.provider.
+
+We are changing from Vagrant to Terraform. Terraform is infrastructure as code. 
+This allows us to define how we want our infrastructure to look, 
+and let terraform figure out how to get there.
 
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
 We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
 On each pull request to the main branch, we first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
 which runs a handful of jobs:
-* check-for-warnings
-* build
-* test
-* run-simulation
-* sonarqube-analysis
+* Check-for-warnings
+* Build
+* Test
+* Run-simulation
+* Sonarqube-analysis
 
 These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
 The important note is that the run-simulation could have http requests that could time out, however, we ensured that if
@@ -120,7 +124,6 @@ Over logging strategy is quite extensive, since we have had a lot of troubles wi
 We log when we raise exceptions and when exceptions are caught, this to help us see how erros where propecated through the system.
 We log execution time of methods called, this was done as to help us see if there wehere methods bottle necking us.
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
-
 
 ## Security
 We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
