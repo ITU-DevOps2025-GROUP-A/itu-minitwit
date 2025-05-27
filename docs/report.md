@@ -152,9 +152,12 @@ The difficulties of the project were primarily to translate the simulation_api f
 new features as well as learning new and unfamiliar technologies that should be integrated with the project.  
 ## Evolution
 
-Throughout the project there has been a division in the group between developing the new implementations to the web app
-and operating these feature with CI/CD pipelines.
-* Technical dept
+### Technical Debt 
+The group experienced first hand was how much technical debt could slowdown the development process. 
+When we first shipped our code, we had not made sure that all the simulator tests passed. Because of this 
+our database where missing all of the initial users, which gave us simulator errors. Because of these errors, fixes 
+where later attempted to insert the users into the database, but this created a new error, where our VM would 
+crash, which never got fixed.
 
 ### 'Dev' and 'Ops'
 In the beginning of the project we had a lot of work that needed to be done. This was for instance translating the simulation whilst
