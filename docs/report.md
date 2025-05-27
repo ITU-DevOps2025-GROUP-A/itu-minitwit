@@ -211,5 +211,4 @@ grafana is a visualisation of structured data.
 * grafana and prometheus
 
 # TO-DO
-# Technical Debt
 # Sequence Diagram
