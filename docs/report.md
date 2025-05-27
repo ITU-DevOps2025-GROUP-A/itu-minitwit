@@ -108,8 +108,7 @@ We log execution time of methods called, this was done as to help us see if ther
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
 
 
-'***add section about our security assessment results here'
-
+## Security
 We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
 A segment of this quality gate, was to ensure that there were no security hotspots. Not only did SonarQube show where the hotspots were,
 but it also explained why this is a hotspot, and how to fix it. In our last release, we still had security hotspot, more specifically an
