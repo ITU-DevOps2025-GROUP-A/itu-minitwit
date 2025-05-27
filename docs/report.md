@@ -49,6 +49,11 @@ One thing that is missing in the terraform file is correctly configuring the fir
     * A powerful and widely used logging framework for .Net applications
   * Seq
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
+
+
+## Current state of System
+![Static analysis on SonarQube](images/sonarqube.png)
+
 # Process
 
 ## Provisioning
@@ -176,7 +181,6 @@ Lesson: Do it right the first time.
 We had an experience, before we were introduced to logging in class, where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
 This resulted in the bloating our Digital Ocean droplet with sizeable logs. What could be done differently, was to make to only log
 once and automatically delete old ones which weren't needed anymore.
-
 ### CPU overload
 We experienced a CPU overload in our droplet. The CPU would spike to 100% and sometimes exceeding that (due to Digital Ocean limiting the CPU size of the droplet).
 This resulted in a crash of the droplet. Unfortunately, as of now (9/5/2025) we haven't found the reason for why this is happening.
