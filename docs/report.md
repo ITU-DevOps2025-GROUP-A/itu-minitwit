@@ -137,7 +137,6 @@ sticky-notes:
 
 
 ## AI-assistant
-
 The use of Chat-GPT has been used to some extent. Fx to more easily understand (at the time) complex notions in the topic of operations.
 Various Dockerfiles were created with the assistance of AI, in order to more effectively "learn-by-doing". 
 Furthermore, the assistance of AI proved efficient when having to translate the python api into C#. Problems did arise from this, though.
@@ -148,6 +147,7 @@ heel, since we spent a lot of time trying to diagnose the problem with the simul
 # Reflections
 The difficulties of the project were primarily to translate the simulation_api from python to C#, but also in implementing
 new features as well as learning new and unfamiliar technologies that should be integrated with the project.  
+
 ## Evolution
 
 ### Technical Debt 
@@ -166,7 +166,6 @@ A logbook was created to keep track of any work that has been done, but was unfo
 
 
 ### Refactoring
-
 When rewriting the code to C# and adhering to the 'minitwit_sim_api.py' from session3, we weren't thorough enough when analyzing the specs.
 This resulted in us pushing code to production, which 'seemingly' followed specs from the aforementioned file.
 After long contemplation on why it didn't work, we took a step back and properly analyzed the api specs.
@@ -189,7 +188,6 @@ For future reference, we should have a more thorough testing suite.
 ![Spikes on Grafana](images/Grafana_Issues%202025-04-04.png)
 
 ## Maintenance
-
 
 running docker compose up --build when merging with main. 
 using grafana and prometheus to monitor application activity. 
