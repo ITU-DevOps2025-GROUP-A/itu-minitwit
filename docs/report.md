@@ -31,15 +31,15 @@ header-includes:
 ![Docker swarm deployment of _itu_minitwit_ ](images/DockerDeployment.png)
 
 The system is in the process of being converted to use Docker Swarm instead of a docker network. 
-This was to increase the crash resilience, by replicating the services, so if one where to crash the application would still function. Currently the Swarm can be setup using a terraform file, but it only deploys an empty Swarm. The step to populate the Swarm would happen as a step in the deployment chain, where we would ssh into the manager node and then deployed there. 
+This was to increase the crash resilience, by replicating the services, so if one were to crash the application would still function. Currently, the Swarm can be setup using terraform, but it only deploys an empty Swarm. The step to populate the Swarm would happen as a step in the deployment chain, where we would ssh into the manager node and then deployed there. 
 There were complications configuring the Prometheus client's configuration file, since the way the file is mounted to the service is different in docker Swarm as to the standard deployment. 
 
-One thing that is missing in the terraform file is correctly configuring the firewalls so that the internal DNS network can correctly route between the services. 
+One thing that is missing in our terraform configuration is correctly opening for the firewalls so that the internal DNS network can correctly route between the services. 
 
-* programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
+* Programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
 * Onion architecture for code structure
-* dependencies:
+* Dependencies:
   * API
   * PostgreSQL
   * Digital Ocean
@@ -49,6 +49,7 @@ One thing that is missing in the terraform file is correctly configuring the fir
     * A powerful and widely used logging framework for .Net applications
   * Seq
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
+
 # Process
 
 ## Provisioning
