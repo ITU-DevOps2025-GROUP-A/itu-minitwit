@@ -39,7 +39,7 @@ One thing that is missing in our terraform configuration is correctly opening fo
 * Programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
 * Onion architecture for code structure
-* dependencies:
+* Dependencies:
   * API
   * PostgreSQL
   * Digital Ocean
