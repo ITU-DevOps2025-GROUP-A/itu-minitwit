@@ -107,7 +107,8 @@ We log the input and output of methods called, this way we can observe if they b
 We had set SonarQube up to comment on every pull-request we had made, to ensure that the pull-request had passed the quality gate.
 A segment of this quality gate, was to ensure that there were no security hotspots. Not only did SonarQube show where the hotspots were,
 but it also explained why this is a hotspot, and how to fix it. In our last release, we still had security hotspot, more specifically an
-"Open Redirect Vulnerability". This vulnerability results in an "E-score", but the rest is rate B or above. This could have been fixed, by creating a "allow-list" of safe relative paths to redirect to.
+"Open Redirect Vulnerability". This vulnerability results in an "E-score", but the rest is rate B or above. 
+This could have been fixed, by creating a "allow-list" of safe relative paths to redirect to.
 
 ## Scaling
 Regarding the scaling of our application, we are in the transition of moving from docker compose to docker swarm. However, we are using docker compose that composes
@@ -115,6 +116,15 @@ an API and MiniTwit dockerfile. Our intentions are to set up a declarative IaC u
 Unfortunately as of now, we haven't fully integrated this structure because of some complications with the implementation.
 
 sticky-notes:
+
+
+## AI-assistant
+
+The use of Chat-GPT has been used to some extent. Fx to more easily understand (at the time) complex notions in the topic of operations.
+Various Dockerfiles were created with the assistance of AI, in order to more effectively "learn-by-doing". 
+Furthermore, the assistance of AI proved efficient when having to translate the python api into C#. Problems did arise from this, though.
+As an example, the AI rewrote the returned status codes, which meant that it wasn't compliant with the simulator. This ended up being an achilles
+heel, since we spent a lot of time trying to diagnose the problem with the simulator.
 
 
 # Reflections
