@@ -70,6 +70,8 @@ only having to change the vm.provider.
 We are changing from Vagrant to Terraform. Terraform is infrastructure as code. 
 This allows us to define how we want our infrastructure to look, 
 and let terraform figure out how to get there.
+Terraform is currently configured to provision DigitalOcean, 
+having 1 manager and 2 workers connected in a Docker swarm.
 
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
