@@ -175,7 +175,7 @@ new features as well as learning new and unfamiliar technologies that should be 
 ## Evolution
 
 ### Technical Debt 
-The group experienced first hand, how much technical debt could slow down the development process. 
+The group experienced first hand, how much technical debt can slow down the development process. 
 When we first shipped our code, we had not made sure that all the simulator tests passed. Because of this, 
 our database was missing initial users, which gave us simulator errors. This was likely due to our implementation of the simulator api that would handle the data to insert into our database.
 Because of these errors, we later attempted to insert the missing users into the database. However, this created a new error where our VM would crash and was never resolved.
