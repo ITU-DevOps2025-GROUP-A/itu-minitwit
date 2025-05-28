@@ -73,10 +73,19 @@ and let terraform figure out how to get there.
 Terraform is currently configured to provision DigitalOcean, 
 having 1 manager and 2 workers connected in a Docker swarm.
 
+We have a folder called remote_files which contains files that needs to be pushed to the server. 
+This folder contains:
+- Deploy script
+- Docker compose
+- Prometheus configuration
+
+The folder also contains the Grafana Dashboards. These Were added during report writing and are currently not being utilized.
+The dashboards are also stored in a volume on the server for persistence.  
+
 ## Workflow
 For our entire developing process we've used trunk-based development with each feature being developed in a separate branch. 
 We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
-On each pull request to the main branch, we first run the 'changes-to-pr-to-main' that checks if the pull request has a label followed by 'commit-pr-to-main'
+On each pull request to the main branch, we first run the 'changes-to-pr-to-main' that checks if the pull request has a label, followed by 'commit-pr-to-main'
 which runs a handful of jobs:
 * Check-for-warnings
 * Build
@@ -166,9 +175,9 @@ new features as well as learning new and unfamiliar technologies that should be 
 ## Evolution
 
 ### Technical Debt 
-The group experienced first hand was how much technical debt could slowdown the development process. 
+The group experienced first hand how much technical debt can slow down the development process. 
 When we first shipped our code, we had not made sure that all the simulator tests passed. Because of this 
-our database where missing all of the initial users, which gave us simulator errors. Because of these errors, fixes 
+our database where missing all the initial users, which gave us simulator errors. Because of these errors, fixes 
 where later attempted to insert the users into the database, but this created a new error, where our VM would 
 crash, which never got fixed.
 
@@ -202,12 +211,14 @@ For future reference, we should have a more thorough testing suite.
 ![Spikes on Grafana](images/Grafana_Issues%202025-04-04.png)
 
 ## Grafana
-During session6 we were tasked to add monitoring to our application through
+During session 6 we were tasked to add monitoring to our application through
 prometheus using grafana for visualization. 
 This included monitoring over the requests for different endpoints in the application.
-While we did add monitoring to the application, we didn't use this as much due to other tasks being prioritized.
-This is also important to note that while maintenance is important, it can have a meaningless effect on the application without proper inspection.
-For the future, it could be nice to have an alert for any downtime on the application. That way we could have better handling over any server issues or errors that occurred in our application.
+While we did add monitoring to the application, we didn't use it as much as we should have.
+There wasn't much time to monitor the application with our schedule this semester.
+This was made worse by having to use digitalocean's dashboard as well, 
+as we struggled to add CPU usage to Grafana. 
+One thing that could have ameliorated this issue was alerts.
 
 # TO-DO
 # Sequence Diagram
