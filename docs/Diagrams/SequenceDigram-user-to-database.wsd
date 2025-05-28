@@ -6,16 +6,16 @@ participant api.service
 participant api.repository
 database database
 
-user -> web : send messsage "Hello"
+user -> web : PostMessage(), MessageDTO = username, "Hello"
 activate web
 
-web -> api.controller : <<send message>>(username, "Hello")
+web -> api.controller : CreateMessage(MessageDTO)
 activate api.controller
 
-api.controller -> api.service : <<add message>>(username, "Hello")
+api.controller -> api.service : PostMessage(username, "Hello")
 activate api.service
 
-api.service -> api.repository : <<add message>>(username, "Hello")
+api.service -> api.repository : PostMessage(username, "Hello")
 activate api.repository
 
 api.repository -> database : <<get user>>(username)
@@ -75,7 +75,7 @@ api.repository -> database : <<get user>>(username)
     end
 deactivate api.repository
 
-api.controller <-- api.service : message created
+api.controller <-- api.service : true if successfully posted
 deactivate api.service
 
 web <-- api.controller : <<Http no content>> 204
