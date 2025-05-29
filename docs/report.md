@@ -49,9 +49,7 @@ One thing that is missing in our terraform configuration is correctly opening fo
   * Prometheus
   * Grafana
   * Serilog
-    * A powerful and widely used logging framework for .Net applications
   * Seq
-    * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 
 
 ## Current state of System
