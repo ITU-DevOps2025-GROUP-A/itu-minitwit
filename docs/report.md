@@ -56,9 +56,10 @@ We are currently not opening the correct ports for the internal DNS network to r
   * Terraform
 
 ## Interactions of subsystems
-Below are two sequence diagrams, showing the flow when a user posts a message. It was the simulator, that would post the message instead, it just communicates directley with the api, instead of the web. Otherwise they are the same from the api controller and onwards.
+Below is a sequence diagram, showing the flow of a user posting a message.
+It shows the sequence of calls for a message being posted on our application through the web.
+The simulator calls the API directly, bypassing the web part of the sequence diagram.
 ![alt text](images/sequence-user.png)
-![alt text](images/sequence-sim.png)
 
 ## Current state of System
 As seen on the image below, the reliability and maintainability score is as high as can be. The same goes for code-duplication.
@@ -73,7 +74,7 @@ at the same time (fx the web app and the database), define and install their dep
 VM's without having to rely on configuration a specific user interface from various VM providers. This means that we are able to use the Vagrantfile with several providers,
 only having to change the vm.provider.
 
-We are changing from Vagrant to Terraform. Terraform is infrastructure as code. 
+We are changing from Vagrant to Terraform. Terraform is an Infrastructure as Code. 
 This allows us to define how we want our infrastructure to look, 
 and let terraform figure out how to get there.
 Terraform is currently configured to provision DigitalOcean, 
