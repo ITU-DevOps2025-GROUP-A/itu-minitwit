@@ -37,6 +37,8 @@ There were complications configuring the Prometheus client's configuration file,
 
 One thing that is missing in our terraform configuration is correctly opening for the firewalls so that the internal DNS network can correctly route between the services. 
 
+## Used Technologies
+
 * Programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
 * Onion architecture for code structure
