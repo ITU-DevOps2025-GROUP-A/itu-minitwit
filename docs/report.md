@@ -108,6 +108,8 @@ The important note is that the "run-simulation test script" could have http requ
 there was only a couple of timeouts we could deduce that the codebase still worked as intended. This was primarily to confirm
 that if we had 10's or 100's of timeouts, we could be sure that the codebase was broken.
 
+![Release And Deploy Workflow](images/ReleaseAndDeployWorkflow.png)
+
 ## Monitoring
 We monitor through the use of Prometheus and Grafana.
 Our application expose an endpoint using the OpenTelemetry nuget package for exporting telemetry data that Prometheus can understand.
