@@ -181,7 +181,7 @@ The group experienced first hand, how much technical debt can slow down the deve
 When we first shipped our code, we had not made sure that all the simulator tests passed. Because of this, 
 our database was missing initial users, which gave us simulator errors. This was likely due to our implementation of the simulator api that would handle the data to insert into our database.
 Because of these errors, we later attempted to insert the missing users into the database. However, this created a new error where our VM would crash and was never resolved.
-As of now (28-05-2025), the API will still create any the users who aren't registered in the database.
+As of now (28-05-2025), the API will still create any users who aren't registered in the database.
 
 ### 'Dev' and 'Ops'
 In the beginning of the project we had a lot of work that needed to be done. This was for instance translating the simulation whilst
