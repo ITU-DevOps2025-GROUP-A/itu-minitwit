@@ -37,6 +37,8 @@ There were complications configuring the Prometheus client's configuration file,
 
 One thing that is missing in our terraform configuration is correctly opening for the firewalls so that the internal DNS network can correctly route between the services. 
 
+## Used Technologies
+
 * Programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
 * Containerised with docker.
 * Onion architecture for code structure
@@ -44,12 +46,15 @@ One thing that is missing in our terraform configuration is correctly opening fo
   * EFCore
   * PostgreSQL
   * Digital Ocean
+  * Docker
   * Prometheus
   * Grafana
   * Serilog
   * Seq
+  * Terraform
 
 ## Interactions of subsystems
+Below are two sequence diagrams, showing the flow when a user posts a message. It was the simulator, that would post the message instead, it just communicates directley with the api, instead of the web. Otherwise they are the same from the api controller and onwards.
 ![alt text](images/sequence-user.png)
 ![alt text](images/sequence-sim.png)
 
