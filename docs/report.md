@@ -100,7 +100,7 @@ which runs a handful of jobs:
 * Sonarqube-analysis
 
 These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
-The important note is that the run-simulation could have http requests that could time out, however, we ensured that if
+The important note is that the "run-simulation test script" could have http requests that could time out, however, we ensured that if
 there was only a couple of timeouts we could deduce that the codebase still worked as intended. This was primarily to confirm
 that if we had 10's or 100's of timeouts, we could be sure that the codebase was broken.
 
