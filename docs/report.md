@@ -43,7 +43,6 @@ One thing that is missing in our terraform configuration is correctly opening fo
 * Containerised with docker.
 * Onion architecture for code structure
 * Dependencies:
-  * API
   * EFCore
   * PostgreSQL
   * Digital Ocean
