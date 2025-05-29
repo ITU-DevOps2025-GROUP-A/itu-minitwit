@@ -146,7 +146,7 @@ rate(
 
 ## Logging
 We rely on serilog for generating and sending logs to our log visualiser Seq. 
-Over logging strategy is quite extensive, since we have had a lot of troubles with our application, we thought it was better to have more and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
+Our logging strategy is quite extensive, since we have had a lot of troubles with our application, we thought it was better to have more, and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
 We log when we raise exceptions and when exceptions are caught, this to help us see how erros where propecated through the system.
 We log execution time of methods called, this was done as to help us see if there wehere methods bottle necking us.
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
