@@ -96,7 +96,7 @@ which runs a handful of jobs:
 * Check-for-warnings
 * Build
 * Test
-* Run-simulation
+* Run-simulation test script
 * Sonarqube-analysis
 
 These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
