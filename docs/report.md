@@ -32,10 +32,12 @@ header-includes:
 \pagebreak
 
 The system is in the process of being converted to use Docker Swarm instead of a docker network. 
-This was to increase the crash resilience, by replicating the services, so if one were to crash the application would still function. Currently, the Swarm can be setup using terraform, but it only deploys an empty Swarm. The step to populate the Swarm would happen as a step in the deployment chain, where we would ssh into the manager node and then deployed there. 
-There were complications configuring the Prometheus client's configuration file, since the way the file is mounted to the service is different in docker Swarm as to the standard deployment. 
+This was to increase the crash resilience by replicating the services, so that if the application ever did crash, it would still function and be up and running. Currently, the Swarm can be set up by using terraform, but it only deploys an empty Swarm. 
+The idea was to populate the Swarm as a step in the deployment chain, where we would SSH into the manager node and then deploy it from there. 
+However, there were complications with the Prometheus config file. It can't mount to the swarm in the same way as it can to a single machine with docker compose.
 
-One thing that is missing in our terraform configuration is correctly opening for the firewalls so that the internal DNS network can correctly route between the services. 
+One thing missing in our terraform configuration is to correctly open for the firewalls.
+We are currently not opening the correct ports for the internal DNS network to route between docker services.
 
 ## Used Technologies
 
@@ -68,7 +70,7 @@ For explanation of security, see the security section in the process overview.
 ## Provisioning
 Vagrant was used to provision virtual machines, specified with a Vagrantfile. In the Vagrantfile, you're able to provision several virtual machines 
 at the same time (fx the web app and the database), define and install their dependencies. This allows for an easy, streamlined way to always provision
-VM's without having to rely on configuration a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
+VM's without having to rely on configuration a specific user interface from various VM providers. This means that we are able to use the Vagrantfile with several providers,
 only having to change the vm.provider.
 
 We are changing from Vagrant to Terraform. Terraform is infrastructure as code. 
