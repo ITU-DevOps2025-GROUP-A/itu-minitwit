@@ -46,10 +46,12 @@ One thing that is missing in our terraform configuration is correctly opening fo
   * EFCore
   * PostgreSQL
   * Digital Ocean
+  * Docker
   * Prometheus
   * Grafana
   * Serilog
   * Seq
+  * Terraform
 
 ## Interactions of subsystems
 ![alt text](images/sequence-user.png)
