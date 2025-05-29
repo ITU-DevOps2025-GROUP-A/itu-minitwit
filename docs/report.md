@@ -107,6 +107,10 @@ The important note is that the "run-simulation test script" could have http requ
 there were only a couple of timeouts, we could deduce that the codebase still worked as intended. This was primarily to confirm
 that if we had tens or hundreds of timeouts, we could be sure that the codebase was broken.
 
+Below is a diagram showing the flow of our release-and-deploy workflow and the other workflows it calls.
+
+![Release And Deploy Workflow](images/ReleaseAndDeployWorkflow.png)
+
 ## Monitoring
 We monitor through the use of Prometheus and Grafana.
 Our application exposes an endpoint using the OpenTelemetry nuget package for exporting telemetry data that Prometheus can understand.
@@ -115,37 +119,7 @@ Prometheus saves the data in a time series database. This database is queried by
 Our custom dashboard has been built on top of the "ASP.NET Core" dashboard published by the .NET Team (https://grafana.com/grafana/dashboards/19924-asp-net-core/).
 We have added a few custom panels, the most interesting being, a table that shows the total amount of request per status code for each endpoint. 
 Another useful panel we made, plots the request duration of different endpoints.
-
-Status code panel
-```
-label_join(
-  http_server_request_duration_seconds_count{
-    job="$job", 
-    instance="$instance", 
-    http_route!=""
-  }, 
-  "method_route", 
-  " ", 
-  "http_request_method", 
-  "http_route"
-)
-```
-
-Status code panel
-```
-rate(
-  http_server_request_duration_seconds_sum{
-    job="$job", 
-    instance="$instance", http_route!=""
-  }[5m]
-) / rate(
-  http_server_request_duration_seconds_count{
-    job="$job", 
-    instance="$instance", 
-    http_route!=""
-    } [5m]
-)
-```
+(The queries for the panels can be found in the appendix)
 
 ## Logging
 We rely on serilog for generating and sending logs to our log visualiser Seq. 
@@ -175,8 +149,6 @@ As an example, the AI rewrote the returned status codes, which meant that it was
 heel, since we spent a lot of time trying to diagnose the problem with the simulator.
 
 # Reflections
-The difficulties of the project were primarily to translate the "simulation_api" from python to C#, but also in implementing
-new features as well as learning new and unfamiliar technologies that should be integrated with the project.  
 
 ## Evolution
 
@@ -220,3 +192,53 @@ During session6 we were tasked to add monitoring to our application through Prom
 This included monitoring over the requests for different endpoints in the application. While we did add monitoring to the application, we didn't use it as much as we should have. 
 There wasn't much time to monitor the application with our schedule this semester. This was made worse by having to use digitalocean's dashboard as well, 
 as we struggled to add CPU usage to Grafana. One thing that could have ameliorated this issue was alerts for any odd behavior with the application.
+
+## DevOps Reflections
+Despite the fact the group did not solve all issues, we still learned a lot about the DevOps work. 
+When comparing the workflow to other projects like "_Chirp!_" from BDSA, a significant difference was the deployment strategy. 
+Using Docker Images to deploy instead of just copying the entire codebase was a great learning experience. 
+We could have used the built-in versioning in Docker Hub to better be able to roll back to working versions of the codebase. 
+This would have been helpful when faulty code was deployed to production.
+
+### Workflow Learnings
+The group also learned a lot working with workflows. In previous projects, most of the logic was in one large workflow. 
+In this course, we worked with splitting up the responsibility into smaller workflows, then these where called by composing workflows. 
+This way of working made it easier to find errors and read the intended functionality of the workflows.
+
+Another learning was incorporating static analysis into the integration chain. 
+This gave better clarity of the code quality and helped reduce errors being merged with the main deployment.
+
+# Appendix
+
+## Status code panel
+Query for the status code panel:
+```
+label_join(
+  http_server_request_duration_seconds_count{
+    job="$job", 
+    instance="$instance", 
+    http_route!=""
+  }, 
+  "method_route", 
+  " ", 
+  "http_request_method", 
+  "http_route"
+)
+```
+
+## Endpoint duration panel
+Query for the endpoint duration panel:
+```
+rate(
+  http_server_request_duration_seconds_sum{
+    job="$job", 
+    instance="$instance", http_route!=""
+  }[5m]
+) / rate(
+  http_server_request_duration_seconds_count{
+    job="$job", 
+    instance="$instance", 
+    http_route!=""
+    } [5m]
+)
+```
