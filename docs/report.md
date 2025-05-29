@@ -32,10 +32,14 @@ header-includes:
 \pagebreak
 
 The system is in the process of being converted to use Docker Swarm instead of a docker network. 
-This was to increase the crash resilience, by replicating the services, so if one were to crash the application would still function. Currently, the Swarm can be setup using terraform, but it only deploys an empty Swarm. The step to populate the Swarm would happen as a step in the deployment chain, where we would ssh into the manager node and then deployed there. 
-There were complications configuring the Prometheus client's configuration file, since the way the file is mounted to the service is different in docker Swarm as to the standard deployment. 
+This was to increase the crash resilience by replicating the services, so that if the application ever did crash, it would still function and be up and running. Currently, the Swarm can be set up by using terraform, but it only deploys an empty Swarm. 
+The idea was to populate the Swarm as a step in the deployment chain, where we would SSH into the manager node and then deploy it from there. 
+However, there were complications with the Prometheus config file. It can't mount to the swarm in the same way as it can to a single machine with docker compose.
 
-One thing that is missing in our terraform configuration is correctly opening for the firewalls so that the internal DNS network can correctly route between the services. 
+One thing missing in our terraform configuration is to correctly open for the firewalls.
+We are currently not opening the correct ports for the internal DNS network to route between docker services.
+
+## Used Technologies
 
 ## Used Technologies
 
@@ -68,7 +72,7 @@ For explanation of security, see the security section in the process overview.
 ## Provisioning
 Vagrant was used to provision virtual machines, specified with a Vagrantfile. In the Vagrantfile, you're able to provision several virtual machines 
 at the same time (fx the web app and the database), define and install their dependencies. This allows for an easy, streamlined way to always provision
-VM's without having to rely on configuration a specific user interface from various VM providers. This means, that we are able to use the Vagrantfile with several providers,
+VM's without having to rely on configuration a specific user interface from various VM providers. This means that we are able to use the Vagrantfile with several providers,
 only having to change the vm.provider.
 
 We are changing from Vagrant to Terraform. Terraform is infrastructure as code. 
@@ -96,11 +100,11 @@ which runs a handful of jobs:
 * Check-for-warnings
 * Build
 * Test
-* Run-simulation
+* Run-simulation test script
 * Sonarqube-analysis
 
 These jobs are there to ensure that the codebase still works as intended on the branch that the developer has worked on.
-The important note is that the run-simulation could have http requests that could time out, however, we ensured that if
+The important note is that the "run-simulation test script" could have http requests that could time out, however, we ensured that if
 there was only a couple of timeouts we could deduce that the codebase still worked as intended. This was primarily to confirm
 that if we had 10's or 100's of timeouts, we could be sure that the codebase was broken.
 
@@ -146,7 +150,7 @@ rate(
 
 ## Logging
 We rely on serilog for generating and sending logs to our log visualiser Seq. 
-Over logging strategy is quite extensive, since we have had a lot of troubles with our application, we thought it was better to have more and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
+Our logging strategy is quite extensive, since we have had a lot of troubles with our application, we thought it was better to have more, and then not keep them for as long, to see if they could help us sort out our errors/bugs. It is as follows
 We log when we raise exceptions and when exceptions are caught, this to help us see how erros where propecated through the system.
 We log execution time of methods called, this was done as to help us see if there wehere methods bottle necking us.
 We log the input and output of methods called, this way we can observe if they behave like we expect them too.
@@ -181,7 +185,7 @@ The group experienced first hand, how much technical debt can slow down the deve
 When we first shipped our code, we had not made sure that all the simulator tests passed. Because of this, 
 our database was missing initial users, which gave us simulator errors. This was likely due to our implementation of the simulator api that would handle the data to insert into our database.
 Because of these errors, we later attempted to insert the missing users into the database. However, this created a new error where our VM would crash and was never resolved.
-As of now (28-05-2025), the API will still create any the users who aren't registered in the database.
+As of now (28-05-2025), the API will still create any users who aren't registered in the database.
 
 ### 'Dev' and 'Ops'
 In the beginning of the project we had a lot of work that needed to be done. This was for instance translating the simulation whilst
