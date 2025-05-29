@@ -224,3 +224,11 @@ There wasn't much time to monitor the application with our schedule this semeste
 This was made worse by having to use digitalocean's dashboard as well, 
 as we struggled to add CPU usage to Grafana. 
 One thing that could have ameliorated this issue was alerts.
+
+## DevOps Reflections
+Despite the fact the the group did not solve all of the issues, we still learned a lot about the DevOps work. When comparing the workflow to other projects like _Chirp!_ in BDSA, one big difference was the deployment strategy. Using Docker Images to deploy instead of just copying the entire codebase was a great learning experience. We could have used the built in versioning in Docker Hub to better be able to roll back to working versions of the codebase. This would have been helpful, when faulty code was deployed to production.
+
+### Workflow Learnings
+The group also learned a lot working with workflows. In previous projects most of the logic was in one large workflow. In this course we worked with splitting up the responsibility into smaller workflows, then these where called by composing workflows. This way of working made it easier to find errors and read the intended functionality of the workflows.
+
+Another learning was incorporating static analysis into the integration chain. This gave better clarity of the code quality and helped reduce errors being merged with the main deployment. 
