@@ -177,8 +177,6 @@ As an example, the AI rewrote the returned status codes, which meant that it was
 heel, since we spent a lot of time trying to diagnose the problem with the simulator.
 
 # Reflections
-The difficulties of the project were primarily to translate the simulation_api from python to C#, but also in implementing
-new features as well as learning new and unfamiliar technologies that should be integrated with the project.  
 
 ## Evolution
 
