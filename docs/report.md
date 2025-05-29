@@ -26,12 +26,10 @@ header-includes:
 ## Current Deployment
 ![Current deployment of _itu_minitwit_ ](images/CurrentDeployment.png)
 
-## Interactions of subsystems
-![alt text](images/sequence-user.png)
-![alt text](images/sequence-sim.png)
-
 ## Swarm Deployment
 ![Docker swarm deployment of _itu_minitwit_ ](images/DockerDeployment.png)
+
+\pagebreak
 
 The system is in the process of being converted to use Docker Swarm instead of a docker network. 
 This was to increase the crash resilience, by replicating the services, so if one were to crash the application would still function. Currently, the Swarm can be setup using terraform, but it only deploys an empty Swarm. The step to populate the Swarm would happen as a step in the deployment chain, where we would ssh into the manager node and then deployed there. 
@@ -53,6 +51,9 @@ One thing that is missing in our terraform configuration is correctly opening fo
   * Seq
     * A self-hosted search, analysis, and alerting server built for structured logs and traces. Simpel and well suited for .Net applications
 
+## Interactions of subsystems
+![alt text](images/sequence-user.png)
+![alt text](images/sequence-sim.png)
 
 ## Current state of System
 As seen on the image below, the reliability and maintainability score is as high as can be. The same goes for code-duplication.
@@ -75,9 +76,10 @@ having 1 manager and 2 workers connected in a Docker swarm.
 
 We have a folder called remote_files which contains files that needs to be pushed to the server. 
 This folder contains:
-- Deploy script
-- Docker compose
-- Prometheus configuration
+
+* Deploy script
+* Docker compose
+* Prometheus configuration
 
 The folder also contains the Grafana Dashboards. These Were added during report writing and are currently not being utilized.
 The dashboards are also stored in a volume on the server for persistence.  
@@ -87,6 +89,7 @@ For our entire developing process we've used trunk-based development with each f
 We use GitHub actions for CI/CD and GitHub issues for task management. Our workflows include building, testing and deploying the code.
 On each pull request to the main branch, we first run the 'changes-to-pr-to-main' that checks if the pull request has a label, followed by 'commit-pr-to-main'
 which runs a handful of jobs:
+
 * Check-for-warnings
 * Build
 * Test
@@ -157,16 +160,12 @@ Regarding the scaling of our application, we are in the transition of moving fro
 an API and MiniTwit dockerfile. Our intentions are to set up a declarative IaC using Terraform and with that set up a docker swarm cluster that can handle the scaling of our application.
 Unfortunately as of now, we haven't fully integrated this structure because of some complications with the implementation.
 
-sticky-notes:
-
-
 ## AI-assistant
 The use of Chat-GPT has been used to some extent. Fx to more easily understand (at the time) complex notions in the topic of operations.
 Various Dockerfiles were created with the assistance of AI, in order to more effectively "learn-by-doing". 
 Furthermore, the assistance of AI proved efficient when having to translate the python api into C#. Problems did arise from this, though.
 As an example, the AI rewrote the returned status codes, which meant that it wasn't compliant with the simulator. This ended up being an achilles
 heel, since we spent a lot of time trying to diagnose the problem with the simulator.
-
 
 # Reflections
 The difficulties of the project were primarily to translate the simulation_api from python to C#, but also in implementing
@@ -188,13 +187,11 @@ between the developers, who started translating the simulation to C#, and the op
 The difficulties lied in the communication between these two groups and how both parties could get up to speed with their respective work they've made.
 A logbook was created to keep track of any work that has been done, but was unfortunately disregarded by other tasks and hasn't been updated since 07/02/25 (according to the log.md file).
 
-
 ### Refactoring
 When rewriting the code to C# and adhering to the 'minitwit_sim_api.py' from session3, we weren't thorough enough when analyzing the specs.
 This resulted in us pushing code to production, which 'seemingly' followed specs from the aforementioned file.
 After long contemplation on why it didn't work, we took a step back and properly analyzed the api specs.
 Lesson: Do it right the first time.
-
 
 ## Operation and Maintenance
 
@@ -202,6 +199,7 @@ Lesson: Do it right the first time.
 We had an experience, before we were introduced to logging in class, where our VM crashed due to extensive (and redundant) logging. We logged to console, docker logs and files.
 This resulted in the bloating our Digital Ocean droplet with sizeable logs. What could be done differently, was to make to only log
 once and automatically delete old ones which weren't needed anymore.
+
 ### CPU overload
 We experienced a CPU overload in our droplet. The CPU would spike to 100% and sometimes exceeding that (due to Digital Ocean limiting the CPU size of the droplet).
 This resulted in a crash of the droplet. Unfortunately, as of now (9/5/2025) we haven't found the reason for why this is happening.
@@ -219,6 +217,3 @@ There wasn't much time to monitor the application with our schedule this semeste
 This was made worse by having to use digitalocean's dashboard as well, 
 as we struggled to add CPU usage to Grafana. 
 One thing that could have ameliorated this issue was alerts.
-
-# TO-DO
-# Sequence Diagram
