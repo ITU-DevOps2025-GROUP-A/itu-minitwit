@@ -118,37 +118,7 @@ Prometheus saves the data in a times series database. This database is queried b
 Our custom dashboard has been built on top of the "ASP.NET Core" dashboard published by the .Net Team (https://grafana.com/grafana/dashboards/19924-asp-net-core/).
 We have added a few custom panels. The most interesting being a table that shows total amount of request per status code for each endpoint. 
 Another useful panel we made plots the request duration of different endpoints.
-
-Status code panel
-```
-label_join(
-  http_server_request_duration_seconds_count{
-    job="$job", 
-    instance="$instance", 
-    http_route!=""
-  }, 
-  "method_route", 
-  " ", 
-  "http_request_method", 
-  "http_route"
-)
-```
-
-Status code panel
-```
-rate(
-  http_server_request_duration_seconds_sum{
-    job="$job", 
-    instance="$instance", http_route!=""
-  }[5m]
-) / rate(
-  http_server_request_duration_seconds_count{
-    job="$job", 
-    instance="$instance", 
-    http_route!=""
-    } [5m]
-)
-```
+(The queries for the panels can be found in the appendix) 
 
 ## Logging
 We rely on serilog for generating and sending logs to our log visualiser Seq. 
@@ -232,3 +202,39 @@ Despite the fact the the group did not solve all of the issues, we still learned
 The group also learned a lot working with workflows. In previous projects most of the logic was in one large workflow. In this course we worked with splitting up the responsibility into smaller workflows, then these where called by composing workflows. This way of working made it easier to find errors and read the intended functionality of the workflows.
 
 Another learning was incorporating static analysis into the integration chain. This gave better clarity of the code quality and helped reduce errors being merged with the main deployment. 
+
+
+# Appendix
+
+## Status code panel
+Query for the status code panel:
+```
+label_join(
+  http_server_request_duration_seconds_count{
+    job="$job", 
+    instance="$instance", 
+    http_route!=""
+  }, 
+  "method_route", 
+  " ", 
+  "http_request_method", 
+  "http_route"
+)
+```
+
+## Endpoint duration panel
+Query for the endpoint duration panel:
+```
+rate(
+  http_server_request_duration_seconds_sum{
+    job="$job", 
+    instance="$instance", http_route!=""
+  }[5m]
+) / rate(
+  http_server_request_duration_seconds_count{
+    job="$job", 
+    instance="$instance", 
+    http_route!=""
+    } [5m]
+)
+```
