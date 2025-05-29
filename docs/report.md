@@ -54,6 +54,7 @@ One thing that is missing in our terraform configuration is correctly opening fo
   * Terraform
 
 ## Interactions of subsystems
+Below are two sequence diagrams, showing the flow when a user posts a message. It was the simulator, that would post the message instead, it just communicates directley with the api, instead of the web. Otherwise they are the same from the api controller and onwards.
 ![alt text](images/sequence-user.png)
 ![alt text](images/sequence-sim.png)
 
