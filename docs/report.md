@@ -26,6 +26,8 @@ header-includes:
 ## Current Deployment
 ![Current deployment of _itu_minitwit_ ](images/CurrentDeployment.png)
 
+\pagebreak
+
 ## Swarm Deployment
 ![Docker swarm deployment of _itu_minitwit_ ](images/DockerDeployment.png)
 
@@ -36,13 +38,12 @@ This was to increase the crash resilience by replicating the services, so that i
 The idea was to populate the Swarm as a step in the deployment chain, where we would SSH into the manager node and then deploy it from there. 
 However, there were complications with the Prometheus config file. It can't mount to the swarm in the same way as it can to a single machine with docker compose.
 
-One thing missing in our terraform configuration is to correctly open for the firewalls.
+One thing missing in our Terraform configuration is to correctly open for the firewalls.
 We are currently not opening the correct ports for the internal DNS network to route between docker services.
 
 ## Used Technologies
-
 * Programmed in C# .NET 9 with ASP.NET as web framework and Blazor frontend.
-* Containerised with docker.
+* Containerized with Docker.
 * Onion architecture for code structure
 * Dependencies:
   * EFCore
@@ -59,11 +60,13 @@ We are currently not opening the correct ports for the internal DNS network to r
 Below is a sequence diagram, showing the flow of a user posting a message.
 It shows the sequence of calls for a message being posted on our application through the web.
 The simulator calls the API directly, bypassing the web part of the sequence diagram.
+
 ![alt text](images/sequence-user.png)
 
 ## Current state of System
 As seen on the image below, the reliability and maintainability score is as high as can be. The same goes for code-duplication.
 For explanation of security, see the security section in the process overview.
+
 ![Static analysis on SonarQube](images/sonarqube.png)
 
 # Process
