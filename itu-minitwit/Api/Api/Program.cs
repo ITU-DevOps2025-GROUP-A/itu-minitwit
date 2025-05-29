@@ -52,9 +52,11 @@ builder.Services.AddScoped<IFollowService, FollowService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 
-var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionStringLocal = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<MinitwitDbContext>(options =>
-    options.UseSqlite(connection));
+    options.UseNpgsql(connectionStringLocal));
+
 
 // Configure logging
 // builder.Host.UseSerilog((context, loggerConfig) =>

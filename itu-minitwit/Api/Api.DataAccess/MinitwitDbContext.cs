@@ -53,7 +53,7 @@ public partial class MinitwitDbContext : DbContext
             entity.Property(e => e.Flagged).HasColumnName("flagged");
             entity.Property(e => e.PubDate).HasColumnName("pub_date");
             entity.Property(e => e.Text)
-                .HasColumnType("string")
+                .HasColumnType("text")
                 .HasColumnName("text");
             
             //index for filtering messages from author
@@ -72,13 +72,13 @@ public partial class MinitwitDbContext : DbContext
 
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.Email)
-                .HasColumnType("string")
+                .HasColumnType("text")
                 .HasColumnName("email");
             entity.Property(e => e.PwHash)
-                .HasColumnType("string")
+                .HasColumnType("text")
                 .HasColumnName("pw_hash");
             entity.Property(e => e.Username)
-                .HasColumnType("string")
+                .HasColumnType("text")
                 .HasColumnName("username");
         });
     }

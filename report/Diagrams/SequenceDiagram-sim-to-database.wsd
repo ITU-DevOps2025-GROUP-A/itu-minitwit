@@ -1,0 +1,12 @@
+@startuml
+actor sim
+participant api.controller
+
+sim -> api.controller : send messsage "Hello"
+activate api.controller
+
+api.controller -> api.controller : same as for web
+
+sim <-- api.controller : <<Http no content>> 204
+deactivate api.controller
+@enduml

@@ -3,6 +3,7 @@ using Api.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -14,16 +15,20 @@ namespace Api.DataAccess.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Api.DataAccess.Models.Follower", b =>
                 {
                     b.Property<int>("WhoId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("who_id");
 
                     b.Property<int>("WhomId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("whom_id");
 
                     b.HasKey("WhoId", "WhomId");
@@ -38,10 +43,12 @@ namespace Api.DataAccess.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Latest")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -52,24 +59,26 @@ namespace Api.DataAccess.Migrations
                 {
                     b.Property<int>("MessageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("message_id");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MessageId"));
+
                     b.Property<int>("AuthorId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("author_id");
 
                     b.Property<int?>("Flagged")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("flagged");
 
                     b.Property<int?>("PubDate")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("pub_date");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("string")
+                        .HasColumnType("text")
                         .HasColumnName("text");
 
                     b.HasKey("MessageId");
@@ -87,22 +96,24 @@ namespace Api.DataAccess.Migrations
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("user_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("string")
+                        .HasColumnType("text")
                         .HasColumnName("email");
 
                     b.Property<string>("PwHash")
                         .IsRequired()
-                        .HasColumnType("string")
+                        .HasColumnType("text")
                         .HasColumnName("pw_hash");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("string")
+                        .HasColumnType("text")
                         .HasColumnName("username");
 
                     b.HasKey("UserId");

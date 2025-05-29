@@ -22,17 +22,11 @@ RUN dotnet publish -c Release -o /out
 # Use .NET runtime image for final container
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
-# Install SQLite
-RUN apt update && apt install -y sqlite3
-
 # Set working directory
 WORKDIR /itu-minitwit/minitwit.Api
 
 # Copy published files from build stage
 COPY --from=build /out ./
-
-# Make a data folder for the database
-RUN mkdir -p ./data
 
 # Set environment variable to Production
 ENV ASPNETCORE_ENVIRONMENT=Production

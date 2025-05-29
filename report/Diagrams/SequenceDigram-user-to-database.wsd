@@ -1,0 +1,87 @@
+@startuml
+actor JohnDoe as user
+participant web
+participant api.controller
+participant api.service
+participant api.repository
+database database
+
+user -> web : Post message "Hello"
+activate web
+
+web -> api.controller : CreateMessage("JohnDoe", "Hello")
+activate api.controller
+
+api.controller -> api.service : PostMessage("JohnDoe", "Hello")
+activate api.service
+
+api.service -> api.repository : PostMessage("JohnDoe", "Hello")
+activate api.repository
+
+api.repository -> database : <<get user>>("JohnDoe")
+    alt user exists
+
+        activate database
+        api.repository <-- database : user
+
+        deactivate database
+        api.repository -> database : <<add messages> "Hello"
+
+        activate database
+        api.repository <-- database : messages created
+        deactivate database
+
+        api.service <-- api.repository : messages created
+    else 
+        activate database
+        api.repository <-- database : null
+        destroy database
+        
+        api.service <-- api.repository : <<exception>> UserDoesntExist
+        
+    end
+deactivate api.repository
+
+break user doesn't exist
+    api.service -> api.service : <<create user>>("JohnDoe")
+    activate api.service
+
+    api.service -> api.repository : <<create user>>("JohnDoe")
+    activate api.repository
+    
+    api.repository -> database : <<create user>>("JohnDoe")
+    activate database
+    
+    api.repository <-- database : user created
+    deactivate database
+
+    api.service <-- api.repository : <<user created>>(user)
+    deactivate api.service
+    deactivate api.repository
+
+    api.service -> api.repository : <<add message>>("JohnDoe", "Hello")
+    activate api.repository
+
+    api.repository -> database : <<add message> "Hello"
+    activate database
+
+    api.repository <-- database : message created
+    deactivate database
+    
+    api.service <-- api.repository : message created
+    deactivate api.repository
+end
+
+api.controller <-- api.service : true
+deactivate api.service
+
+web <-- api.controller : <<HTTP no content>> 204
+deactivate api.controller
+
+
+web -> web : add new message to feed
+web -> web : notify UI of changes
+
+user <-- web : updated message feed
+deactivate web
+@enduml

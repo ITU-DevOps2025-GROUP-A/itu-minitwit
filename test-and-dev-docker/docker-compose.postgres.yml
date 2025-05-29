@@ -1,0 +1,22 @@
+networks:
+  shared_network:
+    external: true
+
+services:
+  postgres:
+    networks:
+      - shared_network
+    image: postgres:14
+    container_name: dev_postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "7654:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+#    restart: unless-stopped
+
+volumes:
+  pgdata:
