@@ -108,6 +108,8 @@ The important note is that the "run-simulation test script" could have http requ
 there was only a couple of timeouts we could deduce that the codebase still worked as intended. This was primarily to confirm
 that if we had 10's or 100's of timeouts, we could be sure that the codebase was broken.
 
+Below is diagram showing the flow of our release-and-deploy workflow and the other workflows it calls.
+
 ![Release And Deploy Workflow](images/ReleaseAndDeployWorkflow.png)
 
 ## Monitoring
